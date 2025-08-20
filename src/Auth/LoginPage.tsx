@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     setError('');
@@ -38,6 +40,9 @@ export default function LoginPage() {
         Entrar
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button type='button' onClick={() => navigate('./registro')}>
+        Registrarse
+      </button>
     </div>
   );
 }
