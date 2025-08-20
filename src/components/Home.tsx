@@ -1,22 +1,56 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
+import { subscribeToUserLists } from '../Services/firestoreHelpers';
+import ListCreator from './ListCreator';
+
+interface List {
+  id: string;
+  name: string;
+}
 
 
 
 const Home = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [lists, setLists] = useState<List[]>([]);
 
-    return (
-        <div style={{textAlign: 'center', marginTop:'100px'}}>
-            <h1>Seleccionar Area</h1>
-            <button onClick={() => navigate('/areas/TIENDA')}>Tienda</button>
-            <button onClick={() => navigate('/areas/PISTA')}style={{ marginLeft: 20 }}>Pista</button>
-            <button onClick={() => navigate('/historial')}style={{ marginLeft: 20 }}>Ver historial</button>
-        </div>
-    )
+  useEffect(() => {
+    if (!user) return;
 
-}
+    const unsubscribe = subscribeToUserLists(user.uid, setLists);
+    return () => unsubscribe();
+  }, [user]);
 
+  const handleGoToList = (listId: string) => {
+    navigate(`/areas/${listId}`);
+  };
+
+  return (
+    <div style={{ textAlign: 'center', marginTop: '100px' }}>
+      <h1>Mis Listas</h1>
+        <ListCreator />
+
+      {lists.length === 0 ? (
+        <p>No tenés listas creadas aún.</p>
+      ) : (
+        lists.map((list) => (
+          <button
+            key={list.id}
+            onClick={() => handleGoToList(list.id)}
+            style={{ margin: '10px' }}
+          >
+            {list.name}
+          </button>
+        ))
+      )}
+
+      <div style={{ marginTop: 40 }}>
+        <button onClick={() => navigate('/historial')}>Ver historial</button>
+      </div>
+    </div>
+  );
+};
 
 export default Home;
-
-
