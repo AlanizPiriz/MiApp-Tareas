@@ -20,7 +20,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: 'auto', paddingTop: 100 }}>
+    <div style={{ maxWidth: 400, margin: 'auto', paddingTop: 'auto' }}>
       <h2>Iniciar sesión</h2>
       <input
         type="email"
@@ -36,7 +36,7 @@ export default function LoginPage() {
         onChange={e => setPassword(e.target.value)}
         style={{ width: '100%', padding: 8, marginBottom: 10 }}
       />
-      <button onClick={handleLogin} style={{ width: '100%', padding: 10 }}>
+      <button onClick={handleLogin} style={{ width: '100%', padding: 10, marginBottom: 10 }}>
         Entrar
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}

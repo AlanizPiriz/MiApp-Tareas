@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   collection,
   query,
@@ -7,7 +7,8 @@ import {
   addDoc,
   deleteDoc,
   doc,
-  getDoc
+  getDoc,
+  getDocs
 } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 import { db } from '../firebase';
@@ -19,22 +20,22 @@ export default function TaskPage() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const [listName, setListName] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // 1. Verificamos que tengamos user y listId antes de continuar
     if (!user || !listId) return;
 
-    // 2. Obtenemos el nombre de la lista
     const fetchListName = async () => {
       const docRef = doc(db, 'users', user.uid, 'lists', listId);
       const snap = await getDoc(docRef);
       if (snap.exists()) {
         setListName((snap.data() as any).name);
+      } else {
+        setListName(null);
       }
     };
     fetchListName();
 
-    // 3. Escuchamos las tareas en tiempo real
     const tasksRef = collection(db, 'users', user.uid, 'lists', listId, 'tasks');
     const q = query(tasksRef);
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -43,7 +44,6 @@ export default function TaskPage() {
       setTasks(arr);
     });
 
-    // 4. Cleanup
     return () => unsubscribe();
   }, [user, listId]);
 
@@ -66,20 +66,54 @@ export default function TaskPage() {
     );
   };
 
+  // NUEVO: Eliminar toda la lista y sus tareas
+  const handleDeleteLista = async () => {
+    if (!user || !listId) return;
+
+    const confirmar = window.confirm("¿Estás seguro de que querés eliminar esta lista y todas sus tareas?");
+    if (!confirmar) return;
+
+    try {
+      console.log("Iniciando eliminación de lista y tareas...");
+
+      // 1. Borrar todas las tareas
+      const tareasRef = collection(db, 'users', user.uid, 'lists', listId, 'tasks');
+      const snapshot = await getDocs(tareasRef);
+      const deletePromises = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+      await Promise.all(deletePromises);
+
+      console.log("Tareas eliminadas.");
+
+      // 2. Borrar la lista
+      const listaRef = doc(db, 'users', user.uid, 'lists', listId);
+      await deleteDoc(listaRef);
+
+      console.log("Lista eliminada.");
+
+      // 3. Redirigir
+      navigate('/listas');
+    } catch (error) {
+      console.error("Error al eliminar la lista:", error);
+      alert("Ocurrió un error al eliminar la lista.");
+    }
+  };
+
   if (!user) return <p>Debés iniciar sesión.</p>;
   if (!listId) return <p>Lista inválida</p>;
 
   return (
     <div style={{ padding: 20 }}>
       <h2>Tareas de la lista: {listName ?? listId}</h2>
+
       <input
         type="text"
         placeholder="Nueva tarea"
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
-      <button onClick={handleAdd} style={{marginTop: 10, marginBottom: 20}}>Agregar tarea</button>
-
+      <button onClick={handleAdd} style={{ marginTop: 10, marginBottom: 20 }}>
+        Agregar tarea
+      </button>
       <ul>
         {tasks.map(task => {
           const fechaFormateada = task.createdAt?.toDate
@@ -105,7 +139,24 @@ export default function TaskPage() {
         })}
       </ul>
 
-      <BackButton />
+      <div className='BotonesBackEliminar' style={{ marginTop: 30 }}>
+        <button
+          onClick={handleDeleteLista}
+          style={{
+            color: 'white',
+            backgroundColor: 'red',
+            padding: '10px 15px',
+            border: 'none',
+            borderRadius: 5,
+            cursor: 'pointer'
+          }}
+          type="button"
+        >
+          Eliminar lista completa
+        </button>
+
+        <BackButton />
+      </div>
     </div>
   );
 }

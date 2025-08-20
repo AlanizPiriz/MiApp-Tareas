@@ -19,7 +19,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: 'auto', paddingTop: 100 }}>
+    <div style={{ maxWidth: 400, margin: 'auto', paddingTop: 'auto' }}>
       <h2>Crear cuenta</h2>
       <input
         type="email"
@@ -35,7 +35,7 @@ export default function RegisterPage() {
         onChange={e => setPassword(e.target.value)}
         style={{ width: '100%', padding: 8, marginBottom: 10 }}
       />
-      <button onClick={handleRegister} style={{ width: '100%', padding: 10 }}>
+      <button onClick={handleRegister} style={{ width: '100%', padding: 10, marginBottom: 10 }}>
         Registrarse
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
