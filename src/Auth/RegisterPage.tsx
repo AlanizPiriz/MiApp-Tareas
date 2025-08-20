@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { auth } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); 
 
   const handleRegister = async () => {
     setError('');
@@ -37,6 +39,10 @@ export default function RegisterPage() {
         Registrarse
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button type="button" onClick={() => navigate('/login')}>
+        Login
+      </button>
+
     </div>
   );
 }

@@ -40,9 +40,10 @@ export default function LoginPage() {
         Entrar
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button type='button' onClick={() => navigate('./registro')}>
+      <button type="button" onClick={() => navigate('/register')}>
         Registrarse
       </button>
+
     </div>
   );
 }

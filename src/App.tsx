@@ -6,12 +6,11 @@ import { db, messaging, getToken, onMessage } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 import Home from './components/Home';
-import SectionSelector from './components/SectionSelector';
 import TaskPage from './components/Task';
 import HistorialPage from './components/HistorialPage';
 
-import LoginPage from '../src/Auth/LoginPage';
-import RegisterPage from '../src/Auth/RegisterPage';
+import LoginPage from './Auth/LoginPage';
+import RegisterPage from './Auth/RegisterPage';
 
 import { AuthProvider, useAuth } from './components/AuthContext';
 
@@ -30,12 +29,11 @@ const AppRouter = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/areas" />} />
+      <Route path="/" element={<Navigate to="/areas" replace />} />
       <Route path="/areas" element={<Home />} />
-      <Route path="/areas/:area" element={<SectionSelector />} />
-      <Route path="/areas/:area/:section" element={<TaskPage />} />
+      <Route path="/listas/:listId" element={<TaskPage />} />
       <Route path="/historial" element={<HistorialPage />} />
-      <Route path="*" element={<Navigate to="/areas" />} />
+      <Route path="*" element={<Navigate to="/areas" replace />} />
     </Routes>
   );
 };

@@ -25,7 +25,7 @@ const Home = () => {
   }, [user]);
 
   const handleGoToList = (listId: string) => {
-    navigate(`/areas/${listId}`);
+    navigate(`/listas/${listId}`);
   };
 
   return (

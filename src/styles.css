@@ -1,84 +1,121 @@
-
-  body {
+/* Global y contenedor principal */
+body {
   display: flex;
   justify-content: center;
   width: 100vw;
   margin: 0;
   padding: 0;
-  background-color: white;
+  background-color: #f0f2f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #333;
 }
 
 .container {
-  width: 80vw; /* Ajusta este valor para más o menos ancho */
-  max-width: 800px; /* Opcional: limita el ancho en pantallas grandes */
+  width: 90vw;
+  max-width: 600px;
+  background: white;
+  margin-top: 60px;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-
+/* Lista de tareas con separación elegante */
 ul {
-  list-style-type: none;
-  padding: 1px;
-  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
+/* Cada tarea como "card" con hover */
 li {
-  margin-bottom: 5px;
-  border-bottom: 10px solid #333;
-  width: 100%;
-} 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 14px 18px;
+  border-radius: 10px;
+  border-left: 5px solid #3498db;
+  transition: background 0.3s, transform 0.2s;
+}
 
+li:hover {
+  background: #f6f8fa;
+  transform: translateY(-2px);
+}
+
+/* Texto de la tarea y fecha */
+li > span {
+  flex: 1;
+}
+
+li small {
+  font-size: 0.85em;
+  color: #888;
+  margin-right: 12px;
+}
+
+/* Botón "Borrar" destacado pero elegante */
 li button {
   background-color: #e74c3c;
-  color: #fff;
   border: none;
-  border-radius: 5px;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  padding: 6px 10px;
+  transition: background 0.2s, transform 0.2s;
 }
 
 li button:hover {
   background-color: #c0392b;
+  transform: scale(1.05);
 }
 
-input {
-  padding: 8px;
-  margin-right: 5px;
-  width: calc(100% - 100px); /* deja espacio para el botón */
+/* Input y botón de agregar tarea en línea */
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  margin-right: 10px;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus {
+  border-color: #3498db;
+  outline: none;
 }
 
 button {
-  padding: 8px;
-  background-color: #4caf50;
-  color: #fff;
+  padding: 10px 15px;
+  background-color: #3498db;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #2980b9;
+  transform: scale(1.05);
 }
 
-.task {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  background-color: #f9f9f9;
-  color: black;
-  border-radius: 5px;
-  width: 88%;
+/* Botón "Volver" distintivo */
+.volver {
+  background-color: #2c3e50;
+  color: white;
 }
 
-.volver{
-  background-color: black;
+.volver:hover {
+  background-color: #1a252f;
 }
 
-.volver:hover{
-  background-color: rgb(24, 23, 23);
-}
-
-.borrar:hover{
-  background-color:#c0392b;
+/* Ajustes generales de inputs y botones sin usar clases */
+li, li * {
+  box-sizing: border-box;
 }

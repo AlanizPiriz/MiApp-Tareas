@@ -34,7 +34,7 @@ export default function ListCreator() {
         value={listName}
         onChange={(e) => setListName(e.target.value)}
       />
-      <button onClick={handleCreate} style={{ marginLeft: '10px' }}>
+      <button onClick={handleCreate} style={{ marginLeft: '10px', marginTop: 20 }}>
         Crear Lista
       </button>
     </div>

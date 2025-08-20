@@ -1,6 +1,7 @@
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { onSnapshot, query} from 'firebase/firestore';
+import { doc, deleteDoc } from 'firebase/firestore';
 
 
 // Crear una lista nueva para un usuario
@@ -67,4 +68,30 @@ export function subscribeToTasks(userId: string, listId: string, callback: (task
     }));
     callback(tasks);
   });
+}
+
+
+/**
+ * Elimina una tarea de Firestore según su ID
+ * @param userId - UID del usuario (opcional, si tu estructura lo requiere)
+ * @param listId - ID de la lista donde está la tarea (opcional, si usás listId en filtros)
+ * @param taskId - ID del documento de la tarea a eliminar
+ */
+export async function deleteTask(userId: string, listId: string, taskId: string) {
+  try {
+    const taskRef = doc(
+      db,
+      'users',
+      userId,
+      'lists',
+      listId,
+      'tasks',
+      taskId
+    );
+    await deleteDoc(taskRef);
+    console.log('Tarea eliminada:', taskId);
+  } catch (error) {
+    console.error('Error al eliminar la tarea:', error);
+    throw error;
+  }
 }
