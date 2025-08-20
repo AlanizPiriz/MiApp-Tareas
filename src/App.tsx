@@ -21,8 +21,8 @@ const AppRouter = () => {
   if (!user) {
     return (
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     );
