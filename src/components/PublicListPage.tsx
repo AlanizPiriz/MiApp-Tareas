@@ -4,16 +4,29 @@ import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestor
 import { db } from '../firebase';
 
 
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext'; // Asegurate de tener este hook
+
+  
+
 export default function PublicListPage() {
   const { publicId } = useParams<{ publicId: string }>();
   const [list, setList] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   console.log("PublicListPage se montó");
 
   useEffect(() => {
     if (!publicId) return;
+
+    if (!user) {
+    navigate('/login'); // 👈 redirige al login si no está autenticado
+    return;
+    }
+
 
     const fetchListAndTasks = async () => {
       const listsRef = collection(db, 'lists');
@@ -47,7 +60,7 @@ export default function PublicListPage() {
     };
 
     fetchListAndTasks();
-  }, [publicId]);
+  }, [publicId, user, navigate]);
 
   if (loading) return <p>Cargando...</p>;
   if (!list) return <p>Lista no encontrada.</p>;
