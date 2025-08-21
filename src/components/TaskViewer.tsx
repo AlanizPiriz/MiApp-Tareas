@@ -12,7 +12,7 @@ export default function TaskViewer({ listId }: Props) {
 
   useEffect(() => {
     if (!user) return;
-    const unsubscribe = subscribeToTasks(user.uid, listId, setTasks);
+    const unsubscribe = subscribeToTasks(listId, setTasks);
     return () => unsubscribe();
   }, [user, listId]);
 

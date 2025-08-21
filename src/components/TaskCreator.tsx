@@ -20,7 +20,7 @@ export default function TaskCreator({ listId }: Props) {
       return;
     }
     try {
-      await addTask(user.uid, listId, taskDescription);
+      await addTask(listId, taskDescription);
       setTaskDescription('');
     } catch {
       alert('Error al agregar la tarea');
@@ -69,7 +69,7 @@ export const TaskItem = ({ id, text, createdAt, listId }: TaskItemProps) => {
       return;
     }
     try {
-      await deleteTask(user.uid, listId, id);
+      await deleteTask(listId, id);
     } catch {
       alert('Error al borrar la tarea');
     }
