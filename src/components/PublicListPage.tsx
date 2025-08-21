@@ -3,18 +3,26 @@ import { useParams } from 'react-router-dom';
 import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 
+
 export default function PublicListPage() {
   const { publicId } = useParams<{ publicId: string }>();
   const [list, setList] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  console.log("PublicListPage se montó");
+
   useEffect(() => {
     if (!publicId) return;
 
     const fetchListAndTasks = async () => {
       const listsRef = collection(db, 'lists');
-      const q = query(listsRef, where('publicId', '==', publicId));
+      const q = query(
+        listsRef,
+        where('publicId', '==', publicId),
+        where('isPublic', '==', true) // 👈 importante
+      );
+
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
