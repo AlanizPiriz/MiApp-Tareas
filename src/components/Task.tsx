@@ -82,13 +82,46 @@ export default function TaskPage() {
 
       {/* Componente para compartir */}
       {publicId && (
-        <ShareToggle
-          userId={user.uid}
-          listId={listId}
-          isPublic={isPublic}
-          publicId={publicId}
-        />
-      )}
+          <>
+            <ShareToggle
+              userId={user.uid}
+              listId={listId}
+              isPublic={isPublic}
+              publicId={publicId}
+            />
+        
+            {/* Botón para compartir por WhatsApp */}
+            <div style={{ marginTop: 10, marginBottom: 20 }}>
+              <button
+                onClick={() => {
+                  const baseUrl = 'https://tuapp.vercel.app/compartir/';
+                  const fullUrl = `${baseUrl}${publicId}`;
+                  const message = `¡Mirá esta lista de tareas! ${fullUrl}`;
+                  const encodedMessage = encodeURIComponent(message);
+                  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                  const whatsappUrl = isMobile
+                    ? `whatsapp://send?text=${encodedMessage}`
+                    : `https://wa.me/?text=${encodedMessage}`;
+                
+                  window.open(whatsappUrl, '_blank');
+                }}
+                style={{
+                  backgroundColor: '#25D366',
+                  color: 'white',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                }}
+              >
+                📲 Compartir por WhatsApp
+              </button>
+            </div>
+          </>
+        )}
+        
+
 
       <input
         type="text"
