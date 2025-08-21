@@ -20,7 +20,7 @@ export default function TaskCreator({ listId }: Props) {
       return;
     }
     try {
-      await addTask(listId, taskDescription);
+      await addTask( listId, taskDescription);
       setTaskDescription('');
     } catch {
       alert('Error al agregar la tarea');
