@@ -17,29 +17,38 @@ import { AuthProvider, useAuth } from './components/AuthContext';
 import PublicListPage from './components/PublicListPage';
 
 const AppRouter = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
+  if (loading) {
+    return <p>Cargando autenticación...</p>; // Puedes reemplazar esto con un spinner si querés
+  }
+
+  // 🔓 Rutas públicas (sin login)
   if (!user) {
     return (
       <Routes>
         <Route path="/public/:publicId" element={<PublicListPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* Redirigir cualquier otra ruta a login (excepto las públicas) */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
 
+  // 🔐 Rutas protegidas (con usuario logueado)
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/areas" replace />} />
       <Route path="/areas" element={<Home />} />
       <Route path="/listas/:listId" element={<TaskPage />} />
       <Route path="/historial" element={<HistorialPage />} />
+      <Route path="/public/:publicId" element={<PublicListPage />} /> {/* También puede acceder desde aquí */}
       <Route path="*" element={<Navigate to="/areas" replace />} />
     </Routes>
   );
 };
+
 
 const App = () => {
   useEffect(() => {
