@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  collection,
-  query,
-  onSnapshot,
-  addDoc,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs
-} from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 import { db } from '../firebase';
 import BackButton from './BackButton';
+import ShareToggle from './ShareToggle';
+
+import {
+  subscribeToTasks,
+  addTask,
+  deleteTask,
+  deleteListAndTasks,
+} from '../Services/firestoreHelpers';
 
 export default function TaskPage() {
   const { listId } = useParams<{ listId: string }>();
@@ -20,81 +19,57 @@ export default function TaskPage() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const [listName, setListName] = useState<string | null>(null);
+  const [publicId, setPublicId] = useState<string | null>(null);
+  const [isPublic, setIsPublic] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user || !listId) return;
 
-    const fetchListName = async () => {
-      const docRef = doc(db, 'users', user.uid, 'lists', listId);
+    const fetchListData = async () => {
+      const docRef = doc(db, 'lists', listId);
       const snap = await getDoc(docRef);
       if (snap.exists()) {
-        setListName((snap.data() as any).name);
+        const data = snap.data() as any;
+        setListName(data.name);
+        setPublicId(data.publicId || null);
+        setIsPublic(data.isPublic || false);
       } else {
         setListName(null);
       }
     };
-    fetchListName();
 
-    const tasksRef = collection(db, 'users', user.uid, 'lists', listId, 'tasks');
-    const q = query(tasksRef);
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const arr: any[] = [];
-      snapshot.forEach(d => arr.push({ id: d.id, ...d.data() }));
-      setTasks(arr);
-    });
+    fetchListData();
 
+    const unsubscribe = subscribeToTasks(listId, setTasks);
     return () => unsubscribe();
   }, [user, listId]);
 
   const handleAdd = async () => {
-    if (!input.trim() || !user || !listId) return;
-    await addDoc(
-      collection(db, 'users', user.uid, 'lists', listId, 'tasks'),
-      {
-        text: input,
-        createdAt: new Date(),
-      }
-    );
+    if (!input.trim() || !listId) return;
+    await addTask(listId, input);
     setInput('');
   };
 
   const handleDelete = async (taskId: string) => {
-    if (!user || !listId) return;
-    await deleteDoc(
-      doc(db, 'users', user.uid, 'lists', listId, 'tasks', taskId)
-    );
+    if (!listId) return;
+    await deleteTask(listId, taskId);
   };
 
-  // NUEVO: Eliminar toda la lista y sus tareas
   const handleDeleteLista = async () => {
-    if (!user || !listId) return;
+    if (!listId) return;
 
-    const confirmar = window.confirm("¿Estás seguro de que querés eliminar esta lista y todas sus tareas?");
+    const confirmar = window.confirm(
+      '¿Estás seguro de que querés eliminar esta lista y todas sus tareas?'
+    );
     if (!confirmar) return;
 
     try {
-      console.log("Iniciando eliminación de lista y tareas...");
-
-      // 1. Borrar todas las tareas
-      const tareasRef = collection(db, 'users', user.uid, 'lists', listId, 'tasks');
-      const snapshot = await getDocs(tareasRef);
-      const deletePromises = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
-      await Promise.all(deletePromises);
-
-      console.log("Tareas eliminadas.");
-
-      // 2. Borrar la lista
-      const listaRef = doc(db, 'users', user.uid, 'lists', listId);
-      await deleteDoc(listaRef);
-
-      console.log("Lista eliminada.");
-
-      // 3. Redirigir
-      navigate('/listas');
+      await deleteListAndTasks(listId);
+      navigate('/areas');
     } catch (error) {
-      console.error("Error al eliminar la lista:", error);
-      alert("Ocurrió un error al eliminar la lista.");
+      console.error('Error al eliminar la lista:', error);
+      alert('Ocurrió un error al eliminar la lista.');
     }
   };
 
@@ -105,6 +80,16 @@ export default function TaskPage() {
     <div style={{ padding: 20 }}>
       <h2>Tareas de la lista: {listName ?? listId}</h2>
 
+      {/* Componente para compartir */}
+      {publicId && (
+        <ShareToggle
+          userId={user.uid}
+          listId={listId}
+          isPublic={isPublic}
+          publicId={publicId}
+        />
+      )}
+
       <input
         type="text"
         placeholder="Nueva tarea"
@@ -114,32 +99,30 @@ export default function TaskPage() {
       <button onClick={handleAdd} style={{ marginTop: 10, marginBottom: 20 }}>
         Agregar tarea
       </button>
+
       <ul>
-        {tasks.map(task => {
+        {tasks.map((task) => {
           const fechaFormateada = task.createdAt?.toDate
             ? new Intl.DateTimeFormat('es-AR', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
               }).format(task.createdAt.toDate())
-            : task.createdAt
-            ? new Intl.DateTimeFormat('es-AR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-              }).format(new Date(task.createdAt))
             : 'Sin fecha';
 
           return (
             <li key={task.id}>
-              {task.text} <small>({fechaFormateada})</small>{' '}
+              {task.description} <small>({fechaFormateada})</small>{' '}
               <button onClick={() => handleDelete(task.id)}>Borrar</button>
             </li>
           );
         })}
       </ul>
 
-      <div className='BotonesBackEliminar' style={{ marginTop: 30 }}>
+      <div
+        className="BotonesBackEliminar"
+        style={{ marginTop: 30, display: 'flex', gap: 10 }}
+      >
         <button
           onClick={handleDeleteLista}
           style={{
@@ -148,13 +131,11 @@ export default function TaskPage() {
             padding: '10px 15px',
             border: 'none',
             borderRadius: 5,
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
-          type="button"
         >
           Eliminar lista completa
         </button>
-
         <BackButton />
       </div>
     </div>

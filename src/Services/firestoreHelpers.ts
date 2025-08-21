@@ -1,33 +1,77 @@
 import { db } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { onSnapshot, query} from 'firebase/firestore';
-import { doc, deleteDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  onSnapshot,
+  doc,
+  deleteDoc,
+  getDocs,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { nanoid } from 'nanoid'; // npm i nanoid si no lo tenés
 
+// Crear una lista nueva (guardada en /lists con ownerId)
+export const createList = async (uid: string, name: string) => {
+  const publicId = nanoid(8); // Genera un código único de 8 caracteres
+  const docRef = await addDoc(collection(db, 'lists'), {
+    name,
+    ownerId: uid,
+    publicId,
+    isPublic: false, // Por defecto no está pública
+    createdAt: serverTimestamp(),
+  });
+  return docRef.id;
+};
 
-// Crear una lista nueva para un usuario
-export async function createList(userId: string, name: string): Promise<string> {
-  try {
-    // Referencia a la colección 'lists' dentro del usuario
-    const listsRef = collection(db, 'users', userId, 'lists');
+// 🔁 Suscribirse a TODAS las listas (no recomendado en producción sin filtro)
+export function subscribeToLists(callback: (lists: any[]) => void) {
+  const listsRef = collection(db, 'lists');
+  const q = query(listsRef);
 
-    // Crear documento nuevo con id automático
-    const docRef = await addDoc(listsRef, {
-      name,
-      createdAt: serverTimestamp(),
-      sharedWith: [], // inicialmente vacía
-    });
-
-    return docRef.id; // Retornamos el id para usarlo luego
-  } catch (error) {
-    console.error('Error creando lista:', error);
-    throw error;
-  }
+  return onSnapshot(q, (snapshot) => {
+    const lists = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    callback(lists);
+  });
 }
 
-// Crear una tarea dentro de una lista específica
-export async function addTask(userId: string, listId: string, description: string) {
+// ✅ Suscribirse SOLO a las listas del usuario actual
+export function subscribeToUserLists(userId: string, callback: (lists: any[]) => void) {
+  const listsRef = collection(db, 'lists');
+  const q = query(listsRef, where('ownerId', '==', userId)); // 👈 filtramos por el dueño
+
+  return onSnapshot(q, (snapshot) => {
+    const lists = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    callback(lists);
+  });
+}
+
+// Suscribirse a tareas de una lista
+export function subscribeToTasks(listId: string, callback: (tasks: any[]) => void) {
+  const tasksRef = collection(db, 'lists', listId, 'tasks');
+  const q = query(tasksRef);
+
+  return onSnapshot(q, (snapshot) => {
+    const tasks = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    callback(tasks);
+  });
+}
+
+// Crear tarea en la lista
+export async function addTask(listId: string, description: string) {
   try {
-    const tasksRef = collection(db, 'users', userId, 'lists', listId, 'tasks');
+    const tasksRef = collection(db, 'lists', listId, 'tasks');
 
     await addDoc(tasksRef, {
       description,
@@ -40,58 +84,29 @@ export async function addTask(userId: string, listId: string, description: strin
   }
 }
 
-
-
-
-export function subscribeToUserLists(userId: string, callback: (lists: any[]) => void) {
-  const listsRef = collection(db, 'users', userId, 'lists');
-  const q = query(listsRef);
-
-  return onSnapshot(q, (snapshot) => {
-    const lists = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    callback(lists);
-  });
+// Eliminar tarea
+export async function deleteTask(listId: string, taskId: string) {
+  const taskRef = doc(db, 'lists', listId, 'tasks', taskId);
+  await deleteDoc(taskRef);
 }
 
+// Eliminar lista y sus tareas
+export async function deleteListAndTasks(listId: string) {
+  // 1. Borrar tareas
+  const tasksRef = collection(db, 'lists', listId, 'tasks');
+  const snapshot = await getDocs(tasksRef);
+  const deletePromises = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+  await Promise.all(deletePromises);
 
-export function subscribeToTasks(userId: string, listId: string, callback: (tasks: any[]) => void) {
-  const tasksRef = collection(db, 'users', userId, 'lists', listId, 'tasks');
-  const q = query(tasksRef);
-
-  return onSnapshot(q, (snapshot) => {
-    const tasks = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    callback(tasks);
-  });
+  // 2. Borrar lista
+  const listRef = doc(db, 'lists', listId);
+  await deleteDoc(listRef);
 }
 
-
-/**
- * Elimina una tarea de Firestore según su ID
- * @param userId - UID del usuario (opcional, si tu estructura lo requiere)
- * @param listId - ID de la lista donde está la tarea (opcional, si usás listId en filtros)
- * @param taskId - ID del documento de la tarea a eliminar
- */
-export async function deleteTask(userId: string, listId: string, taskId: string) {
-  try {
-    const taskRef = doc(
-      db,
-      'users',
-      userId,
-      'lists',
-      listId,
-      'tasks',
-      taskId
-    );
-    await deleteDoc(taskRef);
-    console.log('Tarea eliminada:', taskId);
-  } catch (error) {
-    console.error('Error al eliminar la tarea:', error);
-    throw error;
-  }
+// ✅ Cambiar visibilidad pública de la lista
+export async function setListPublicStatus(listId: string, isPublic: boolean) {
+  const listRef = doc(db, 'lists', listId);
+  await updateDoc(listRef, {
+    isPublic,
+  });
 }

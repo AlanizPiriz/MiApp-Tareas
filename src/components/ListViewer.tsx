@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import { subscribeToUserLists } from '../Services/firestoreHelpers';
+import { subscribeToLists } from '../Services/firestoreHelpers';
 import { useNavigate } from 'react-router-dom';
 import { eliminarLista } from './eliminarLista';
 
@@ -11,7 +11,15 @@ export default function ListViewer() {
 
   useEffect(() => {
     if (!user) return;
-    const unsubscribe = subscribeToUserLists(user.uid, setLists);
+
+    const unsubscribe = subscribeToLists((allLists) => {
+      // Filtramos listas que el usuario posee o comparte
+      const myLists = allLists.filter(list =>
+        list.ownerId === user.uid || (list.sharedWith && list.sharedWith.includes(user.uid))
+      );
+      setLists(myLists);
+    });
+
     return () => unsubscribe();
   }, [user]);
 
@@ -20,7 +28,8 @@ export default function ListViewer() {
   };
 
   const handleEliminar = async (listId: string) => {
-    await eliminarLista(listId);
+    // Opcional: pasar user.uid para validar en eliminarLista
+    await eliminarLista(listId, user?.uid);
     setLists(prev => prev.filter(list => list.id !== listId));
   };
 
@@ -30,8 +39,8 @@ export default function ListViewer() {
   return (
     <ul>
       {lists.map((list) => (
-        <li key={list.id}>
-          <button onClick={() => handleClick(list.id)}>
+        <li key={list.id} style={{ marginBottom: 10 }}>
+          <button onClick={() => handleClick(list.id)} style={{ marginRight: 10 }}>
             {list.name}
           </button>
           <button onClick={() => handleEliminar(list.id)}>

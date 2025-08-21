@@ -1,32 +1,27 @@
-import { db } from '../firebase'; // ajusta la ruta a tu archivo firebase.ts
-import {
-  doc,
-  deleteDoc,
-  collection,
-  getDocs
-} from "firebase/firestore";
+// eliminarLista.ts
+import { doc, getDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 
-/**
- * Elimina una lista y todas sus tareas relacionadas de Firestore
- * @param listaId - ID del documento de la lista a eliminar
- */
-export const eliminarLista = async (listaId: string): Promise<void> => {
-  const confirmar = window.confirm("¿Estás seguro de que deseas eliminar esta lista y todas sus tareas?");
-  if (!confirmar) return;
+export async function eliminarLista(listId: string, userId?: string) {
+  if (!userId) throw new Error('No userId provided for eliminarLista');
 
-  try {
-    // 1. Borrar tareas de la subcolección
-    const tareasRef = collection(db, `listas/${listaId}/tareas`);
-    const tareasSnapshot = await getDocs(tareasRef);
+  // Verificamos que el usuario sea el dueño de la lista antes de eliminar
+  const listRef = doc(db, 'lists', listId);
+  const snap = await getDoc(listRef);
 
-    const deletePromises = tareasSnapshot.docs.map((docSnap) => deleteDoc(docSnap.ref));
-    await Promise.all(deletePromises);
+  if (!snap.exists()) throw new Error('La lista no existe');
 
-    // 2. Borrar el documento de la lista
-    await deleteDoc(doc(db, "listas", listaId));
-
-    console.log("✅ Lista y tareas eliminadas correctamente.");
-  } catch (error) {
-    console.error("❌ Error al eliminar la lista:", error);
+  const data = snap.data();
+  if (data.ownerId !== userId) {
+    throw new Error('No tenés permisos para eliminar esta lista');
   }
-};
+
+  // Borrar tareas de la lista
+  const tasksRef = collection(db, 'lists', listId, 'tasks');
+  const snapshot = await getDocs(tasksRef);
+  const deletePromises = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+  await Promise.all(deletePromises);
+
+  // Borrar la lista
+  await deleteDoc(listRef);
+}

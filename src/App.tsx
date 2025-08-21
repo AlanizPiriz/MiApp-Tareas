@@ -14,12 +14,15 @@ import RegisterPage from './Auth/RegisterPage';
 
 import { AuthProvider, useAuth } from './components/AuthContext';
 
+import PublicListPage from './components/PublicListPage';
+
 const AppRouter = () => {
   const { user } = useAuth();
 
   if (!user) {
     return (
       <Routes>
+        <Route path="/public/:publicId" element={<PublicListPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<Navigate to="/login" />} />

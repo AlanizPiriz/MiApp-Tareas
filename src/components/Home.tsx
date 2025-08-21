@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import { subscribeToUserLists } from '../Services/firestoreHelpers';
+import { subscribeToUserLists } from '../Services/firestoreHelpers'; // ✅ USAR ESTA FUNCIÓN
 import ListCreator from './ListCreator';
 
 interface List {
@@ -9,18 +9,15 @@ interface List {
   name: string;
 }
 
-
-
 const Home = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth(); // ✅ unificado en una sola línea
   const [lists, setLists] = useState<List[]>([]);
-  const { logout } = useAuth();
 
   useEffect(() => {
     if (!user) return;
 
-    const unsubscribe = subscribeToUserLists(user.uid, setLists);
+    const unsubscribe = subscribeToUserLists(user.uid, setLists); // ✅ esta es la función correcta
     return () => unsubscribe();
   }, [user]);
 
@@ -33,7 +30,8 @@ const Home = () => {
       <h1>Mis Listas</h1>
       <h3>Hola, {user?.email}</h3>
       <button onClick={logout}>Cerrar sesión</button>
-        <ListCreator />
+
+      <ListCreator />
 
       {lists.length === 0 ? (
         <p>No tenés listas creadas aún.</p>

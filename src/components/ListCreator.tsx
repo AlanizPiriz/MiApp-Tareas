@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { createList } from '../Services/firestoreHelpers';
+import { useNavigate } from 'react-router-dom';
 
 export default function ListCreator() {
   const { user } = useAuth();
   const [listName, setListName] = useState('');
+  const navigate = useNavigate();
 
   const handleCreate = async () => {
     if (!user) {
@@ -18,11 +20,12 @@ export default function ListCreator() {
     }
 
     try {
-      const listId = await createList(user.uid, listName);
-      alert(`Lista creada con id: ${listId}`);
+      const listId = await createList(user.uid, listName.trim());
       setListName('');
+      navigate(`/listas/${listId}`); // Redirige a la nueva lista
     } catch (error) {
       alert('Error al crear la lista');
+      console.error(error);
     }
   };
 
@@ -34,7 +37,11 @@ export default function ListCreator() {
         value={listName}
         onChange={(e) => setListName(e.target.value)}
       />
-      <button onClick={handleCreate} style={{ marginLeft: '10px', marginTop: 20 }}>
+      <button 
+        onClick={handleCreate} 
+        style={{ marginLeft: '10px', marginTop: 20 }}
+        disabled={!listName.trim()}
+      >
         Crear Lista
       </button>
     </div>
