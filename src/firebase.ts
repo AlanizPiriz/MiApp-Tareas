@@ -5,12 +5,12 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDFUQE5axt-rdWjKmE_2Vjsuc65_jLhRqY",
-  authDomain: "tareas-store.firebaseapp.com",
-  projectId: "tareas-store",
-  storageBucket: "tareas-store.firebasestorage.app",
-  messagingSenderId: "856154823033",
-  appId: "1:856154823033:web:9481d295ecbc95c73337a8"
+  apiKey: "AIzaSyATmFSfglE1IPX51Ricr0pMCjBcBXLaOJA",
+  authDomain: "app-tareasv2.firebaseapp.com",
+  projectId: "app-tareasv2",
+  storageBucket: "app-tareasv2.firebasestorage.app",
+  messagingSenderId: "236313959259",
+  appId: "1:236313959259:web:b40d15eea44a1e497ed87e"
 };
 
 const app = initializeApp(firebaseConfig);
