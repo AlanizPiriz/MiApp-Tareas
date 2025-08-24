@@ -1,6 +1,6 @@
 // App.tsx
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import { db, messaging, getToken, onMessage } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -13,42 +13,48 @@ import LoginPage from './Auth/LoginPage';
 import RegisterPage from './Auth/RegisterPage';
 
 import { AuthProvider, useAuth } from './components/AuthContext';
-
 import PublicListPage from './components/PublicListPage';
+
+const RedirectCompartir = () => {
+  const location = useLocation();
+  const publicId = location.pathname.split('/').pop();
+  return <Navigate to={`/public/${publicId}`} replace />;
+};
 
 const AppRouter = () => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <p>Cargando autenticación...</p>; // Puedes reemplazar esto con un spinner si querés
+    return <p>Cargando autenticación...</p>;
   }
 
-  // 🔓 Rutas públicas (sin login)
-  if (!user) {
-    return (
-      <Routes>
-        <Route path="/public/:publicId" element={<PublicListPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        {/* Redirigir cualquier otra ruta a login (excepto las públicas) */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    );
-  }
-
-  // 🔐 Rutas protegidas (con usuario logueado)
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/areas" replace />} />
-      <Route path="/areas" element={<Home />} />
-      <Route path="/listas/:listId" element={<TaskPage />} />
-      <Route path="/historial" element={<HistorialPage />} />
-      <Route path="/public/:publicId" element={<PublicListPage />} /> {/* También puede acceder desde aquí */}
-      <Route path="*" element={<Navigate to="/areas" replace />} />
+      {/* Redirección de /compartir/:publicId hacia /public/:publicId */}
+      <Route path="/compartir/:publicId" element={<RedirectCompartir />} />
+
+      {/* Rutas públicas (sin login) */}
+      {!user ? (
+        <>
+          <Route path="/public/:publicId" element={<PublicListPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </>
+      ) : (
+        // Rutas protegidas (con usuario logueado)
+        <>
+          <Route path="/" element={<Navigate to="/areas" replace />} />
+          <Route path="/areas" element={<Home />} />
+          <Route path="/listas/:listId" element={<TaskPage />} />
+          <Route path="/historial" element={<HistorialPage />} />
+          <Route path="/public/:publicId" element={<PublicListPage />} />
+          <Route path="*" element={<Navigate to="/areas" replace />} />
+        </>
+      )}
     </Routes>
   );
 };
-
 
 const App = () => {
   useEffect(() => {
