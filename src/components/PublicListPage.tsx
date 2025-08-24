@@ -12,6 +12,7 @@ import {
 import { db } from '../firebase';
 import { useAuth } from './AuthContext';
 import { addTask, deleteTask } from '../Services/firestoreHelpers';
+import BackButton from './BackButton';
 
 export default function PublicListPage() {
   const { publicId } = useParams<{ publicId: string }>();
@@ -97,6 +98,13 @@ export default function PublicListPage() {
   return (
     <div>
       <h2>Lista pública: {list.name}</h2>
+      <input
+        type="text"
+        placeholder="Nueva tarea"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <button onClick={handleAdd}>Agregar tarea</button>
 
       <ul>
         {tasks.map((task) => (
@@ -107,13 +115,7 @@ export default function PublicListPage() {
         ))}
       </ul>
 
-      <input
-        type="text"
-        placeholder="Nueva tarea"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <button onClick={handleAdd}>Agregar tarea</button>
+      <BackButton />
     </div>
   );
 }

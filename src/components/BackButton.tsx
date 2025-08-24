@@ -5,7 +5,9 @@ const BackButton = () => {
 
   return (
     <div style={{ marginTop: '20px' }}>
-      <button onClick={() => navigate(-1)} className='volver'>← Volver</button>
+      <button onClick={() => navigate('/areas')} className='volver'>
+        ← Volver
+      </button>
     </div>
   );
 };
