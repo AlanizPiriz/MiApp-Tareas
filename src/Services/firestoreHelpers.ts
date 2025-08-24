@@ -11,20 +11,23 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { nanoid } from 'nanoid'; // npm i nanoid si no lo tenés
+import { v4 as uuidv4 } from 'uuid';
 
 // Crear una lista nueva (guardada en /lists con ownerId)
-export const createList = async (uid: string, name: string) => {
-  const publicId = nanoid(8); // Genera un código único de 8 caracteres
+export async function createList(ownerId: string, name: string) {
   const docRef = await addDoc(collection(db, 'lists'), {
     name,
-    ownerId: uid,
-    publicId,
-    isPublic: false, // Por defecto no está pública
+    ownerId,
+    isPublic: false,
+    publicId: uuidv4(),
+    collaborators: {
+      [ownerId]: true, // 👈 el creador también es colaborador
+    },
     createdAt: serverTimestamp(),
   });
+
   return docRef.id;
-};
+}
 
 // 🔁 Suscribirse a TODAS las listas (no recomendado en producción sin filtro)
 export function subscribeToLists(callback: (lists: any[]) => void) {
@@ -40,10 +43,10 @@ export function subscribeToLists(callback: (lists: any[]) => void) {
   });
 }
 
-// ✅ Suscribirse SOLO a las listas del usuario actual
+// ✅ Suscribirse SOLO a las listas donde el usuario es colaborador
 export function subscribeToUserLists(userId: string, callback: (lists: any[]) => void) {
   const listsRef = collection(db, 'lists');
-  const q = query(listsRef, where('ownerId', '==', userId)); // 👈 filtramos por el dueño
+  const q = query(listsRef, where(`collaborators.${userId}`, '==', true)); // 👈 colaborador
 
   return onSnapshot(q, (snapshot) => {
     const lists = snapshot.docs.map(doc => ({

@@ -1,39 +1,41 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+  doc,
+  updateDoc
+} from 'firebase/firestore';
 import { db } from '../firebase';
-
-
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // Asegurate de tener este hook
-
-  
+import { useAuth } from './AuthContext';
+import { addTask, deleteTask } from '../Services/firestoreHelpers';
 
 export default function PublicListPage() {
   const { publicId } = useParams<{ publicId: string }>();
   const [list, setList] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [input, setInput] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
-
-  console.log("PublicListPage se montó");
 
   useEffect(() => {
     if (!publicId) return;
 
     if (!user) {
-    navigate('/login'); // 👈 redirige al login si no está autenticado
-    return;
+      navigate('/login');
+      return;
     }
-
 
     const fetchListAndTasks = async () => {
       const listsRef = collection(db, 'lists');
       const q = query(
         listsRef,
         where('publicId', '==', publicId),
-        where('isPublic', '==', true) // 👈 importante
+        where('isPublic', '==', true)
       );
 
       const querySnapshot = await getDocs(q);
@@ -45,13 +47,24 @@ export default function PublicListPage() {
       }
 
       const listDoc = querySnapshot.docs[0];
-      setList({ id: listDoc.id, ...listDoc.data() });
+      const listData = listDoc.data();
+      const listId = listDoc.id;
 
-      // Suscripción en tiempo real a tareas
-      const tasksRef = collection(db, 'lists', listDoc.id, 'tasks');
-      const unsubscribe = onSnapshot(tasksRef, snapshot => {
+      setList({ id: listId, ...listData });
+
+      // ✅ Agregar al usuario como colaborador si no lo es aún
+      if (user && !listData.collaborators?.[user.uid]) {
+        const docRef = doc(db, 'lists', listId);
+        await updateDoc(docRef, {
+          [`collaborators.${user.uid}`]: true
+        });
+      }
+
+      // 👁 Escuchar en tiempo real las tareas
+      const tasksRef = collection(db, 'lists', listId, 'tasks');
+      const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
         const arr: any[] = [];
-        snapshot.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
+        snapshot.forEach((doc) => arr.push({ id: doc.id, ...doc.data() }));
         setTasks(arr);
         setLoading(false);
       });
@@ -59,8 +72,24 @@ export default function PublicListPage() {
       return unsubscribe;
     };
 
-    fetchListAndTasks();
+    const unsubscribePromise = fetchListAndTasks();
+
+    return () => {
+      // Cleanup de snapshot si está disponible
+      unsubscribePromise.then((unsub) => unsub && unsub());
+    };
   }, [publicId, user, navigate]);
+
+  const handleAdd = async () => {
+    if (!input.trim() || !list?.id) return;
+    await addTask(list.id, input);
+    setInput('');
+  };
+
+  const handleDelete = async (taskId: string) => {
+    if (!list?.id) return;
+    await deleteTask(list.id, taskId);
+  };
 
   if (loading) return <p>Cargando...</p>;
   if (!list) return <p>Lista no encontrada.</p>;
@@ -68,11 +97,23 @@ export default function PublicListPage() {
   return (
     <div>
       <h2>Lista pública: {list.name}</h2>
+
       <ul>
-        {tasks.map(task => (
-          <li key={task.id}>{task.description}</li>
+        {tasks.map((task) => (
+          <li key={task.id}>
+            {task.description}
+            <button onClick={() => handleDelete(task.id)}>Borrar</button>
+          </li>
         ))}
       </ul>
+
+      <input
+        type="text"
+        placeholder="Nueva tarea"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <button onClick={handleAdd}>Agregar tarea</button>
     </div>
   );
 }
