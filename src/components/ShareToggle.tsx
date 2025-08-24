@@ -30,11 +30,11 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
         <div style={{ marginTop: 10 }}>
           <strong>Link público:</strong>{' '}
           <a
-            href={`${window.location.origin}/public/${publicId}`}
+            href={`${window.location.origin}/compartir/${publicId}`}
             target="_blank"
             rel="noreferrer"
           >
-            {window.location.origin}/public/{publicId}
+            {window.location.origin}/compartir/{publicId}
           </a>
         </div>
       )}
