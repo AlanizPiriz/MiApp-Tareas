@@ -7,13 +7,13 @@ import {
   getDocs,
   onSnapshot,
   doc,
-  updateDoc
+  updateDoc,
+  getDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from './AuthContext';
 import { addTask, deleteTask } from '../Services/firestoreHelpers';
 import BackButton from './BackButton';
-
 
 export default function PublicListPage() {
   const { publicId } = useParams<{ publicId: string }>();
@@ -23,7 +23,9 @@ export default function PublicListPage() {
   const [input, setInput] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
+  // Nuevo estado para alias del creador
+  const [ownerAlias, setOwnerAlias] = useState<string | null>(null);
 
   useEffect(() => {
     if (!publicId) return;
@@ -52,19 +54,30 @@ export default function PublicListPage() {
       const listDoc = querySnapshot.docs[0];
       const listData = listDoc.data();
       const listId = listDoc.id;
-      
 
       setList({ id: listId, ...listData });
 
-      // ✅ Agregar al usuario como colaborador si no lo es aún
+      // Traer alias del creador
+      if (listData.ownerId) {
+        const ownerDocRef = doc(db, 'users', listData.ownerId);
+        const ownerDocSnap = await getDoc(ownerDocRef);
+        if (ownerDocSnap.exists()) {
+          const ownerData = ownerDocSnap.data();
+          setOwnerAlias(ownerData.alias || null);
+        } else {
+          setOwnerAlias(null);
+        }
+      }
+
+      // Agregar colaborador si no está
       if (user && !listData.collaborators?.[user.uid]) {
         const docRef = doc(db, 'lists', listId);
         await updateDoc(docRef, {
-          [`collaborators.${user.uid}`]: true
+          [`collaborators.${user.uid}`]: true,
         });
       }
 
-      // 👁 Escuchar en tiempo real las tareas
+      // Escuchar tareas en tiempo real
       const tasksRef = collection(db, 'lists', listId, 'tasks');
       const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
         const arr: any[] = [];
@@ -79,7 +92,6 @@ export default function PublicListPage() {
     const unsubscribePromise = fetchListAndTasks();
 
     return () => {
-      // Cleanup de snapshot si está disponible
       unsubscribePromise.then((unsub) => unsub && unsub());
     };
   }, [publicId, user, navigate]);
@@ -102,11 +114,11 @@ export default function PublicListPage() {
     <div>
       <h2>Lista pública: {list.name}</h2>
       {list.ownerId && (
-      <p>
-        <strong>Creada por:</strong>{' '}
-        {list.ownerId === user!.uid ? 'Vos' : list.ownerId}
-      </p>
-      )}    
+        <p>
+          <strong>Creada por:</strong>{' '}
+          {list.ownerId === user!.uid ? 'Vos' : ownerAlias ?? list.ownerId}
+        </p>
+      )}
       <input
         type="text"
         placeholder="Nueva tarea"
