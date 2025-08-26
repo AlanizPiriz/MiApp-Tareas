@@ -94,7 +94,7 @@ export default function TaskPage() {
             <div style={{ marginTop: 10, marginBottom: 20 }}>
               <button
                 onClick={() => {
-                  const baseUrl = 'https://tuapp.vercel.app/compartir/';
+                  const baseUrl = 'https://mi-app-tareas.vercel.app/compartir/';
                   const fullUrl = `${baseUrl}${publicId}`;
                   const message = `¡Mirá esta lista de tareas! ${fullUrl}`;
                   const encodedMessage = encodeURIComponent(message);
