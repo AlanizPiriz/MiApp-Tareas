@@ -21,9 +21,9 @@ export default function TaskPage() {
   const [listName, setListName] = useState<string | null>(null);
   const [publicId, setPublicId] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState<boolean>(false);
+  const [ownerId, setOwnerId] = useState<string | null>(null);
+  const [ownerAlias, setOwnerAlias] = useState<string | null>(null); // 👈 nuevo
   const navigate = useNavigate();
-  const [ownerId, setOwnerId] = useState<string | null>(null); // ✅ nuevo
-
 
   useEffect(() => {
     if (!user || !listId) return;
@@ -37,6 +37,16 @@ export default function TaskPage() {
         setPublicId(data.publicId || null);
         setIsPublic(data.isPublic || false);
         setOwnerId(data.ownerId || null);
+
+        // 👇 buscar alias del owner
+        if (data.ownerId && data.ownerId !== user.uid) {
+          const userRef = doc(db, 'users', data.ownerId);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            setOwnerAlias(userData.alias || null);
+          }
+        }
       } else {
         setListName(null);
       }
@@ -82,56 +92,53 @@ export default function TaskPage() {
   return (
     <div style={{ padding: 20 }}>
       <h2>Tareas de la lista: {listName ?? listId}</h2>
+
       {ownerId && (
         <p>
           <strong>Creada por:</strong>{' '}
-          {ownerId === user.uid ? 'Vos' : ownerId}
+          {ownerId === user.uid ? 'Vos' : ownerAlias ?? ownerId}
         </p>
       )}
-      
-      
+
       {/* Componente para compartir */}
       {publicId && (
-          <>
-            <ShareToggle
-              userId={user.uid}
-              listId={listId}
-              isPublic={isPublic}
-              publicId={publicId}
-            />
-        
-            {/* Botón para compartir por WhatsApp */}
-            <div style={{ marginTop: 10, marginBottom: 20 }}>
-              <button
-                onClick={() => {
-                  const baseUrl = 'https://mi-app-tareas.vercel.app/compartir/';
-                  const fullUrl = `${baseUrl}${publicId}`;
-                  const message = `¡Mirá esta lista de tareas! ${fullUrl}`;
-                  const encodedMessage = encodeURIComponent(message);
-                  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-                  const whatsappUrl = isMobile
-                    ? `whatsapp://send?text=${encodedMessage}`
-                    : `https://wa.me/?text=${encodedMessage}`;
-                
-                  window.open(whatsappUrl, '_blank');
-                }}
-                style={{
-                  backgroundColor: '#25D366',
-                  color: 'white',
-                  padding: '10px 15px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                }}
-              >
-                📲 Compartir por WhatsApp
-              </button>
-            </div>
-          </>
-        )}
-        
+        <>
+          <ShareToggle
+            userId={user.uid}
+            listId={listId}
+            isPublic={isPublic}
+            publicId={publicId}
+          />
 
+          <div style={{ marginTop: 10, marginBottom: 20 }}>
+            <button
+              onClick={() => {
+                const baseUrl = 'https://mi-app-tareas.vercel.app/compartir/';
+                const fullUrl = `${baseUrl}${publicId}`;
+                const message = `¡Mirá esta lista de tareas! ${fullUrl}`;
+                const encodedMessage = encodeURIComponent(message);
+                const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const whatsappUrl = isMobile
+                  ? `whatsapp://send?text=${encodedMessage}`
+                  : `https://wa.me/?text=${encodedMessage}`;
+
+                window.open(whatsappUrl, '_blank');
+              }}
+              style={{
+                backgroundColor: '#25D366',
+                color: 'white',
+                padding: '10px 15px',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+              }}
+            >
+              📲 Compartir por WhatsApp
+            </button>
+          </div>
+        </>
+      )}
 
       <input
         type="text"
