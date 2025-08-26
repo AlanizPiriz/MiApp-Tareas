@@ -14,6 +14,7 @@ import { useAuth } from './AuthContext';
 import { addTask, deleteTask } from '../Services/firestoreHelpers';
 import BackButton from './BackButton';
 
+
 export default function PublicListPage() {
   const { publicId } = useParams<{ publicId: string }>();
   const [list, setList] = useState<any>(null);
@@ -22,6 +23,7 @@ export default function PublicListPage() {
   const [input, setInput] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
+  
 
   useEffect(() => {
     if (!publicId) return;
@@ -50,6 +52,7 @@ export default function PublicListPage() {
       const listDoc = querySnapshot.docs[0];
       const listData = listDoc.data();
       const listId = listDoc.id;
+      
 
       setList({ id: listId, ...listData });
 
@@ -98,6 +101,12 @@ export default function PublicListPage() {
   return (
     <div>
       <h2>Lista pública: {list.name}</h2>
+      {list.ownerId && (
+      <p>
+        <strong>Creada por:</strong>{' '}
+        {list.ownerId === user!.uid ? 'Vos' : list.ownerId}
+      </p>
+      )}    
       <input
         type="text"
         placeholder="Nueva tarea"

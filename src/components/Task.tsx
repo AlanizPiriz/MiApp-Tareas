@@ -22,6 +22,8 @@ export default function TaskPage() {
   const [publicId, setPublicId] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [ownerId, setOwnerId] = useState<string | null>(null); // ✅ nuevo
+
 
   useEffect(() => {
     if (!user || !listId) return;
@@ -34,6 +36,7 @@ export default function TaskPage() {
         setListName(data.name);
         setPublicId(data.publicId || null);
         setIsPublic(data.isPublic || false);
+        setOwnerId(data.ownerId || null);
       } else {
         setListName(null);
       }
@@ -79,7 +82,14 @@ export default function TaskPage() {
   return (
     <div style={{ padding: 20 }}>
       <h2>Tareas de la lista: {listName ?? listId}</h2>
-
+      {ownerId && (
+        <p>
+          <strong>Creada por:</strong>{' '}
+          {ownerId === user.uid ? 'Vos' : ownerId}
+        </p>
+      )}
+      
+      
       {/* Componente para compartir */}
       {publicId && (
           <>
