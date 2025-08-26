@@ -28,7 +28,7 @@ const Home = () => {
   return (
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
       <h1>Mis Listas</h1>
-      <h3>Hola, {user?.email}</h3>
+      <h3>Hola, {user?.displayName}</h3>
       <button onClick={logout}>Cerrar sesión</button>
 
       <ListCreator />
