@@ -5,6 +5,7 @@ import { useAuth } from './AuthContext';
 import { db } from '../firebase';
 import BackButton from './BackButton';
 import ShareToggle from './ShareToggle';
+import ShareButtons from './ShareButtons'; // 👈 nuevo import
 
 import {
   subscribeToTasks,
@@ -22,7 +23,7 @@ export default function TaskPage() {
   const [publicId, setPublicId] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [ownerId, setOwnerId] = useState<string | null>(null);
-  const [ownerAlias, setOwnerAlias] = useState<string | null>(null); // 👈 nuevo
+  const [ownerAlias, setOwnerAlias] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function TaskPage() {
         setIsPublic(data.isPublic || false);
         setOwnerId(data.ownerId || null);
 
-        // 👇 buscar alias del owner
+        // Buscar alias del owner si no sos vos
         if (data.ownerId && data.ownerId !== user.uid) {
           const userRef = doc(db, 'users', data.ownerId);
           const userSnap = await getDoc(userRef);
@@ -100,45 +101,24 @@ export default function TaskPage() {
         </p>
       )}
 
-      {/* Componente para compartir */}
+      {/* Toggle y botones para compartir */}
       {publicId && (
-        <>
-          <ShareToggle
-            userId={user.uid}
-            listId={listId}
-            isPublic={isPublic}
-            publicId={publicId}
-          />
+        <div style={{ marginTop: 30 }}>
+          <strong style={{ display: 'block', marginBottom: 8 }}>Compartir lista:</strong>
 
-          <div style={{ marginTop: 10, marginBottom: 20 }}>
-            <button
-              onClick={() => {
-                const baseUrl = 'https://mi-app-tareas.vercel.app/compartir/';
-                const fullUrl = `${baseUrl}${publicId}`;
-                const message = `¡Mirá esta lista de tareas! ${fullUrl}`;
-                const encodedMessage = encodeURIComponent(message);
-                const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-                const whatsappUrl = isMobile
-                  ? `whatsapp://send?text=${encodedMessage}`
-                  : `https://wa.me/?text=${encodedMessage}`;
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'flex-end' }}>
+            <ShareToggle
+              userId={user.uid}
+              listId={listId}
+              isPublic={isPublic}
+              publicId={publicId}
+            />
 
-                window.open(whatsappUrl, '_blank');
-              }}
-              style={{
-                backgroundColor: '#25D366',
-                color: 'white',
-                padding: '10px 15px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-              }}
-            >
-              📲 Compartir por WhatsApp
-            </button>
+            <ShareButtons publicId={publicId} />
           </div>
-        </>
+        </div>
       )}
+
 
       <input
         type="text"

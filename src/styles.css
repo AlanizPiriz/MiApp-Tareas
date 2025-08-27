@@ -77,6 +77,8 @@ li button:hover {
 /* Input y botón de agregar tarea en línea */
 input[type="text"] {
   flex: 1;
+  width: 100%; /* que ocupe todo el ancho del contenedor padre */
+  max-width: 600px; /* opcional para no hacerlo enorme */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -84,6 +86,7 @@ input[type="text"] {
   margin-right: 10px;
   transition: border-color 0.2s;
 }
+
 
 input[type="text"]:focus {
   border-color: #3498db;
@@ -126,3 +129,88 @@ li, li * {
   flex-direction: row-reverse;
   align-items: flex-end;
 }
+
+.home-container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.logout-button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 3px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.logout-button:hover{
+  background-color: #bf2d28;
+  transform: scale(1.05);
+}
+
+.list-creator-wrapper {
+  margin-bottom: 30px;
+}
+
+.list-section {
+  margin-top: 40px;
+  text-align: left;
+}
+
+.list-title {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.empty-text {
+  color: #888;
+}
+
+.list-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.list-button {
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  min-width: 150px;
+  font-weight: bold;
+}
+
+.list-my {
+  background-color: #3498db;
+}
+
+.list-shared {
+  background-color: #9b59b6;
+}
+
+.list-shared:hover {
+  background-color: #83429d;
+  transform: scale(1.05);
+}
+
+.historial-wrapper {
+  margin-top: 50px;
+}
+
+.historial-button {
+  background-color: #2ecc71;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+

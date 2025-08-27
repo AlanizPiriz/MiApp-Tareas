@@ -14,6 +14,7 @@ import { db } from '../firebase';
 import { useAuth } from './AuthContext';
 import { addTask, deleteTask } from '../Services/firestoreHelpers';
 import BackButton from './BackButton';
+import '../styles.css';
 
 export default function PublicListPage() {
   const { publicId } = useParams<{ publicId: string }>();
@@ -23,13 +24,13 @@ export default function PublicListPage() {
   const [input, setInput] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
-
-  // Nuevo estado para alias del creador
   const [ownerAlias, setOwnerAlias] = useState<string | null>(null);
+
+  // Estado para controlar si mostramos los botones extra
+  const [showShareOptions, setShowShareOptions] = useState(false);
 
   useEffect(() => {
     if (!publicId) return;
-
     if (!user) {
       navigate('/login');
       return;
@@ -57,7 +58,6 @@ export default function PublicListPage() {
 
       setList({ id: listId, ...listData });
 
-      // Traer alias del creador
       if (listData.ownerId) {
         const ownerDocRef = doc(db, 'users', listData.ownerId);
         const ownerDocSnap = await getDoc(ownerDocRef);
@@ -69,7 +69,6 @@ export default function PublicListPage() {
         }
       }
 
-      // Agregar colaborador si no está
       if (user && !listData.collaborators?.[user.uid]) {
         const docRef = doc(db, 'lists', listId);
         await updateDoc(docRef, {
@@ -77,7 +76,6 @@ export default function PublicListPage() {
         });
       }
 
-      // Escuchar tareas en tiempo real
       const tasksRef = collection(db, 'lists', listId, 'tasks');
       const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
         const arr: any[] = [];
@@ -90,7 +88,6 @@ export default function PublicListPage() {
     };
 
     const unsubscribePromise = fetchListAndTasks();
-
     return () => {
       unsubscribePromise.then((unsub) => unsub && unsub());
     };
@@ -107,36 +104,74 @@ export default function PublicListPage() {
     await deleteTask(list.id, taskId);
   };
 
+  const handleCopyClick = () => {
+    setShowShareOptions(!showShareOptions);
+  };
+
   if (loading) return <p>Cargando...</p>;
   if (!list) return <p>Lista no encontrada.</p>;
 
   return (
-    <div>
-      <h2>Lista pública: {list.name}</h2>
+    <div className="task-page-container">
+      <h2 className="list-title">📢 Lista pública: {list.name}</h2>
+
       {list.ownerId && (
         <p>
           <strong>Creada por:</strong>{' '}
           {list.ownerId === user!.uid ? 'Vos' : ownerAlias ?? list.ownerId}
         </p>
       )}
-      <input
-        type="text"
-        placeholder="Nueva tarea"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <button onClick={handleAdd}>Agregar tarea</button>
 
-      <ul>
+      {/* Botón para mostrar u ocultar botones de compartir */}
+      <div style={{ marginBottom: 20 }}>
+        <button onClick={handleCopyClick}>
+          {showShareOptions ? '🔽 Ocultar opciones de compartir' : '🔗 Copiar link'}
+        </button>
+
+        {showShareOptions && (
+          <div style={{ marginTop: 10 }}>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(`${window.location.origin}/compartir/${publicId}`);
+                alert('Link copiado al portapapeles');
+              }}
+            >
+              Copiar al portapapeles
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="task-input-group">
+        <input
+          type="text"
+          placeholder="Nueva tarea"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="task-input"
+        />
+        <button className="add-button" onClick={handleAdd}>
+          Agregar tarea
+        </button>
+      </div>
+
+      <ul className="task-list">
         {tasks.map((task) => (
-          <li key={task.id}>
+          <li key={task.id} className="task-item">
             {task.description}
-            <button onClick={() => handleDelete(task.id)}>Borrar</button>
+            <button
+              className="delete-button"
+              onClick={() => handleDelete(task.id)}
+            >
+              Borrar
+            </button>
           </li>
         ))}
       </ul>
 
-      <BackButton />
+      <div className="bottom-actions">
+        <BackButton />
+      </div>
     </div>
   );
 }
