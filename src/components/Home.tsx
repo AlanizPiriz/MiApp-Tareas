@@ -1,29 +1,42 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import { subscribeToUserLists } from '../Services/firestoreHelpers'; // ✅ USAR ESTA FUNCIÓN
+import { subscribeToUserLists } from '../Services/firestoreHelpers';
 import ListCreator from './ListCreator';
 
 interface List {
   id: string;
   name: string;
+  ownerId: string;
+  collaborators?: Record<string, boolean>;
 }
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // ✅ unificado en una sola línea
+  const { user, logout } = useAuth();
   const [lists, setLists] = useState<List[]>([]);
 
   useEffect(() => {
     if (!user) return;
 
-    const unsubscribe = subscribeToUserLists(user.uid, setLists); // ✅ esta es la función correcta
+    const unsubscribe = subscribeToUserLists(user.uid, setLists);
     return () => unsubscribe();
   }, [user]);
 
   const handleGoToList = (listId: string) => {
     navigate(`/listas/${listId}`);
   };
+
+  const myLists = user
+  ? lists.filter((list) => list.ownerId === user.uid)
+  : [];
+
+  const sharedLists = user
+    ? lists.filter(
+        (list) => list.ownerId !== user.uid && list.collaborators?.[user.uid]
+      )
+    : [];
+    
 
   return (
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
@@ -33,19 +46,41 @@ const Home = () => {
 
       <ListCreator />
 
-      {lists.length === 0 ? (
-        <p>No tenés listas creadas aún.</p>
-      ) : (
-        lists.map((list) => (
-          <button
-            key={list.id}
-            onClick={() => handleGoToList(list.id)}
-            style={{ margin: '10px' }}
-          >
-            {list.name}
-          </button>
-        ))
-      )}
+      {/* Listas creadas por mí */}
+      <div style={{ marginTop: 30 }}>
+        <h2>Listas creadas por mí</h2>
+        {myLists.length === 0 ? (
+          <p>No creaste ninguna lista aún.</p>
+        ) : (
+          myLists.map((list) => (
+            <button
+              key={list.id}
+              onClick={() => handleGoToList(list.id)}
+              style={{ margin: '10px' }}
+            >
+              {list.name}
+            </button>
+          ))
+        )}
+      </div>
+
+      {/* Listas compartidas conmigo */}
+      <div style={{ marginTop: 30 }}>
+        <h2>Listas compartidas conmigo</h2>
+        {sharedLists.length === 0 ? (
+          <p>No hay listas compartidas con vos.</p>
+        ) : (
+          sharedLists.map((list) => (
+            <button
+              key={list.id}
+              onClick={() => handleGoToList(list.id)}
+              style={{ margin: '10px' }}
+            >
+              {list.name}
+            </button>
+          ))
+        )}
+      </div>
 
       <div style={{ marginTop: 40 }}>
         <button onClick={() => navigate('/historial')}>Ver historial</button>
