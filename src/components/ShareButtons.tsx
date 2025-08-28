@@ -24,53 +24,69 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ publicId }) => {
   const handleShareByEmail = () => {
     const subject = encodeURIComponent('¡Mirá esta lista de tareas!');
     const body = encodeURIComponent(`Hola,\n\nTe comparto esta lista de tareas:\n${fullUrl}`);
-    const mailtoUrl = `mailto:?subject=${subject}&body=${body}`;
-    window.open(mailtoUrl, '_blank');
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`;
+
+    window.open(gmailUrl, '_blank'); // Abre Gmail directamente
   };
 
-  return (
-    <div style={{ marginTop: 10, marginBottom: 20, display: 'flex', gap: '12px' }}>
-      <button
-        onClick={handleShareByWhatsApp}
-        aria-label="Compartir por WhatsApp"
-        style={{
-          backgroundColor: '#25D366',
-          color: 'white',
-          padding: '10px 15px',
-          borderRadius: '8px',
-          border: 'none',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          fontSize: '16px',
-        }}
-      >
-        <FaWhatsapp size={20} />
-      </button>
 
-      <button
-        onClick={handleShareByEmail}
-        aria-label="Compartir por Email"
-        style={{
-          backgroundColor: '#0072C6',
-          color: 'white',
-          padding: '10px 15px',
-          borderRadius: '8px',
-          border: 'none',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          fontSize: '16px',
-        }}
-      >
-        <MdEmail size={20} />
-      </button>
+
+ return (
+  <div
+    style={{
+      marginTop: 10,
+      marginBottom: 20,
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: '12px',
+      alignItems: 'center',
+    }}
+  >
+    <button
+      onClick={handleShareByWhatsApp}
+      aria-label="Compartir por WhatsApp"
+      style={{
+        backgroundColor: '#25D366',
+        color: 'white',
+        padding: '10px 15px',
+        borderRadius: '8px',
+        border: 'none',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        fontSize: '16px',
+      }}
+    >
+      <FaWhatsapp size={20} />
+      <span>WhatsApp</span>
+    </button>
+
+    <button
+      onClick={handleShareByEmail}
+      aria-label="Compartir por Email"
+      style={{
+        backgroundColor: '#0072C6',
+        color: 'white',
+        padding: '10px 15px',
+        borderRadius: '8px',
+        border: 'none',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        fontSize: '16px',
+      }}
+    >
+      <MdEmail size={20} />
+          <span>Email</span>
+        </button>
     </div>
   );
+    
 };
 
 export default ShareButtons;

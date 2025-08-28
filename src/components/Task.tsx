@@ -5,7 +5,6 @@ import { useAuth } from './AuthContext';
 import { db } from '../firebase';
 import BackButton from './BackButton';
 import ShareToggle from './ShareToggle';
-import ShareButtons from './ShareButtons'; // 👈 nuevo import
 
 import {
   subscribeToTasks,
@@ -113,8 +112,6 @@ export default function TaskPage() {
               isPublic={isPublic}
               publicId={publicId}
             />
-
-            <ShareButtons publicId={publicId} />
           </div>
         </div>
       )}

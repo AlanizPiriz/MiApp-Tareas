@@ -16,15 +16,23 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
   const [showButtons, setShowButtons] = useState(false);
 
   const toggleSharing = async () => {
-    const listRef = doc(db, 'lists', listId);
-    await updateDoc(listRef, {
-      isPublic: !sharing,
+  const listRef = doc(db, 'lists', listId);
+  const newSharingStatus = !sharing;
+
+  await updateDoc(listRef, {
+    isPublic: newSharingStatus,
     });
-    setSharing(!sharing);
-    if (sharing) {
-      setShowButtons(false); // Ocultar botones si se oculta el link
+  
+    setSharing(newSharingStatus);
+    
+    // Mostrar los botones si ahora está compartido
+    if (newSharingStatus) {
+      setShowButtons(true);
+    } else {
+      setShowButtons(false);
     }
   };
+  
 
   const handleCopy = async () => {
     try {
