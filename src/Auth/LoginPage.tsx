@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { sendPasswordResetEmail } from 'firebase/auth';
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,6 +20,21 @@ export default function LoginPage() {
       setError('Error al iniciar sesión. Revisa tus credenciales.');
     }
   };
+
+  const handlePasswordReset = async () => {
+    if (!email) {
+      setError('Por favor ingresa tu email para recuperar la contraseña.');
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setError('Correo de recuperación enviado. Revisa tu bandeja de entrada.');
+    } catch (err) {
+      setError('Error al enviar el correo de recuperación.');
+    }
+  };
+
 
   return (
     <div style={{ maxWidth: 400, margin: 'auto', paddingTop: 'auto' }}>
@@ -43,6 +60,13 @@ export default function LoginPage() {
       <button type="button" onClick={() => navigate('/register')}>
         Registrarse
       </button>
+      <button
+        onClick={handlePasswordReset}
+        style={{ width: '100%', padding: 10, marginBottom: 10 }}
+      >
+        ¿Olvidaste tu contraseña?
+      </button>
+        
 
     </div>
   );
