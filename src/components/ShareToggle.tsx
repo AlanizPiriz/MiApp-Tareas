@@ -53,31 +53,30 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
       </button>
 
       {sharing && (
-        <div style={{ marginTop: 10 }}>
-          <button
-            onClick={handleCopy}
-            style={{
-              backgroundColor: '#007bff',
-              color: 'white',
-              padding: '8px 14px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              marginBottom: '10px',
-            }}
-          >
-            📋 {copied ? '¡Link copiado!' : 'Copiar link público'}
-          </button>
+  <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center'}}>
+    <button
+      onClick={handleCopy}
+      style={{
+        backgroundColor: '#007bff',
+        color: 'white',
+        padding: '3px 9px',
+        borderRadius: '8px',
+        border: 'none',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        fontSize: '16px',
+          }}
+        >
+          📋 {copied ? '¡Link copiado!' : 'Copiar link'}
+        </button>
+        
+        {showButtons && <ShareButtons publicId={publicId} />}
+      </div>
+    )}
 
-          {showButtons && (
-            <div style={{ marginTop: 10 }}>
-              <ShareButtons publicId={publicId} />
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

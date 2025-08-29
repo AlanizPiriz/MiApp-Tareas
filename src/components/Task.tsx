@@ -105,7 +105,7 @@ export default function TaskPage() {
         <div style={{ marginTop: 30 }}>
           <strong style={{ display: 'block', marginBottom: 8 }}>Compartir lista:</strong>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'flex-end' }}>
+          <div>
             <ShareToggle
               userId={user.uid}
               listId={listId}

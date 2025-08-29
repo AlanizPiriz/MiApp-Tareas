@@ -34,8 +34,8 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ publicId }) => {
  return (
   <div
     style={{
-      marginTop: 10,
-      marginBottom: 20,
+      marginTop: 0,
+      marginBottom: 0,
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -49,7 +49,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ publicId }) => {
       style={{
         backgroundColor: '#25D366',
         color: 'white',
-        padding: '10px 15px',
+        padding: '3px 9px',
         borderRadius: '8px',
         border: 'none',
         cursor: 'pointer',
@@ -70,7 +70,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ publicId }) => {
       style={{
         backgroundColor: '#0072C6',
         color: 'white',
-        padding: '10px 15px',
+        padding: '3px 9px',
         borderRadius: '8px',
         border: 'none',
         cursor: 'pointer',
