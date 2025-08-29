@@ -62,11 +62,11 @@ export default function LoginPage() {
       </button>
       <button
         onClick={handlePasswordReset}
-        style={{ width: '100%', padding: 10, marginBottom: 10 }}
+        style={{ width: '100%', padding: 10, marginTop: 10 }}
       >
         ¿Olvidaste tu contraseña?
       </button>
-        
+
 
     </div>
   );
