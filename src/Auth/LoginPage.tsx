@@ -100,6 +100,7 @@ export default function LoginPage() {
           backgroundColor: '#fff',
           border: '1px solid #ccc',
           cursor: 'pointer',
+          color:  'black'
         }}
       >
         <img
