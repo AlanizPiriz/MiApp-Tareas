@@ -48,7 +48,7 @@ export default function RegisterPage() {
 
       <input
         type="text"
-        placeholder="Tu alias"
+        placeholder="Alias"
         value={alias}
         onChange={(e) => setAlias(e.target.value)}
         style={{ width: '100%', padding: 8, marginBottom: 10 }}
