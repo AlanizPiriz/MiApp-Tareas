@@ -41,7 +41,7 @@ const Home = () => {
     : [];
 
   return (
-    <div className="home-container">
+    <div>
       <h1>Mis Listas</h1>
       <h3>Hola, {user?.displayName}</h3>
       <button className="logout-button" onClick={logout}>
