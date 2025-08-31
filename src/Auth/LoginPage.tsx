@@ -18,7 +18,7 @@ export default function LoginPage() {
     setError('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/'); // Redirige al home (o donde quieras)
+      navigate('/'); // Redirige al home
     } catch (err) {
       console.error(err);
       setError('Error al iniciar sesión. Revisa tus credenciales.');
@@ -46,7 +46,7 @@ export default function LoginPage() {
     try {
       const result = await signInWithPopup(auth, provider);
       console.log('Usuario logueado con Google:', result.user);
-      navigate('/'); // Redirige al home o dashboard
+      navigate('/');
     } catch (error) {
       console.error(error);
       setError('Error al iniciar sesión con Google.');
@@ -55,24 +55,78 @@ export default function LoginPage() {
 
   return (
     <div style={{ maxWidth: 400, margin: 'auto', paddingTop: '2rem' }}>
-      <h2>Iniciar sesión</h2>
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="250" height="60" viewBox="0 0 250 60">
+          <text x="0" y="45" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="bold" fill="#28a745">LIST</text>
+          <g transform="translate(130, -8.25)">
+            <circle cx="-2" cy="35" r="20" stroke="#28a745" strokeWidth="6" fill="none"/>
+            <path d="M-10 35 l6 6 l10 -12" stroke="#28a745" strokeWidth="6" fill="none"/>
+          </g>
+        </svg>
+      </h1>
 
+      
+    {/* Bloque de correo */}
+    <div style={{ marginBottom: 12 }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 6
+      }}>
+        <label htmlFor="email" style={{ fontWeight: 600, paddingLeft: 5 }}>
+          Correo
+        </label>
+      </div>
+    
       <input
+        id="email"
         type="email"
         placeholder="Email"
         value={email}
         onChange={e => setEmail(e.target.value)}
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+        style={{ padding: 10, width: '100%', boxSizing: 'border-box' }}
       />
-
+    </div>
+    
+    {/* Bloque de contraseña con link a la derecha */}
+    <div style={{ marginBottom: 12 }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 6
+      }}>
+        <label htmlFor="password" style={{ fontWeight: 600, paddingLeft: 5 }}>
+          Contraseña
+        </label>
+    
+        <button
+          type="button"
+          onClick={handlePasswordReset}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            fontSize: 13,
+          }}
+        >
+          <span style={{ color: '#28a745' }}>¿Olvidaste tu contraseña?</span>
+        </button>
+      </div>
+        
       <input
+        id="password"
         type="password"
         placeholder="Contraseña"
         value={password}
         onChange={e => setPassword(e.target.value)}
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
+        style={{ padding: 10, width: '100%', boxSizing: 'border-box' }}
       />
+    </div>
 
+      {/* Botón de login */}
       <button
         onClick={handleLogin}
         style={{ width: '100%', padding: 10, marginBottom: 10 }}
@@ -80,13 +134,22 @@ export default function LoginPage() {
         Entrar
       </button>
 
-      <button
-        onClick={handlePasswordReset}
-        style={{ width: '100%', padding: 10, marginBottom: 10 }}
-      >
-        ¿Olvidaste tu contraseña?
-      </button>
+      {/* Separador */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        margin: '10px 0',
+        color: '#666',
+        fontSize: 14,
+        marginBottom: 20,
+      }}>
+        <hr style={{ flex: 1, border: 'none', borderTop: '1px solid #ccc' }} />
+        <span style={{ margin: '0 10px' }}>o</span>
+        <hr style={{ flex: 1, border: 'none', borderTop: '1px solid #ccc' }} />
+      </div>
+    
 
+      {/* Botón Google */}
       <button
         onClick={handleGoogleLogin}
         style={{
@@ -100,7 +163,7 @@ export default function LoginPage() {
           backgroundColor: '#fff',
           border: '1px solid #ccc',
           cursor: 'pointer',
-          color:  'black'
+          color: 'black'
         }}
       >
         <img
@@ -111,14 +174,24 @@ export default function LoginPage() {
         Continuar con Google
       </button>
 
+      {/* Mensaje de error */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
+      {/* Botón de registro */}
+      <span style={{fontSize: '13px'}}>Nuevo en Listo? </span>
       <button
         type="button"
         onClick={() => navigate('/register')}
-        style={{ width: '100%', padding: 10 }}
+        style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              fontSize: 13,
+              color: '#28a745' ,
+            }}
       >
-        Registrarse
+         Crear cuenta
       </button>
     </div>
   );

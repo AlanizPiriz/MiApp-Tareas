@@ -45,16 +45,15 @@ const Home = () => {
       <h1>
         <svg xmlns="http://www.w3.org/2000/svg" width="250" height="60" viewBox="0 0 250 60">
   
-  <text x="0" y="45" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#28a745">LIST</text>
-  
-  <g transform="translate(130, -8.25)">
-    <circle cx="-2" cy="35" r="15" stroke="#28a745" stroke-width="6" fill="none"/>
-    <path d="M-10 35 l6 6 l10 -12" stroke="#28a745" stroke-width="6" fill="none"/>
-  </g>
-</svg>
+          <text x="0" y="45" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#28a745">LIST</text>
 
+          <g transform="translate(130, -8.25)">
+            <circle cx="-2" cy="35" r="20" stroke="#28a745" stroke-width="6" fill="none"/>
+            <path d="M-10 35 l6 6 l10 -12" stroke="#28a745" stroke-width="6" fill="none"/>
+          </g>
+        </svg>
       </h1>
-      <h3>Hola, {user?.displayName}</h3>
+      <h3 className='Bienvenida'><span>Hola, </span>{user?.displayName}</h3>
       <button className="logout-button" onClick={logout}>
         Cerrar sesión
       </button>
@@ -62,7 +61,7 @@ const Home = () => {
       <div className="list-creator-wrapper">
         <ListCreator />
       </div>
-
+      <div style={{display: 'flex', justifyContent: 'center'}}>
       <section className="list-section">
         <h2 className="list-title">
           <FaClipboardList style={{ marginRight: 8 }} color="#3498db" />
@@ -85,7 +84,8 @@ const Home = () => {
           </div>
         )}
       </section>
-
+      </div>
+      <div style={{display: 'flex', justifyContent: 'center'}}>
       <section className="list-section">
         <h2 className="list-title">
           <FaUsers style={{ marginRight: 8 }} />
@@ -107,11 +107,6 @@ const Home = () => {
           </div>
         )}
       </section>
-
-      <div className="historial-wrapper">
-        <button className="historial-button" onClick={() => navigate('/historial')}>
-          Ver historial
-        </button>
       </div>
     </div>
   );
