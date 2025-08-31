@@ -152,14 +152,7 @@ export default function TaskPage() {
       >
         <button
           onClick={handleDeleteLista}
-          style={{
-            color: 'white',
-            backgroundColor: 'red',
-            padding: '10px 15px',
-            border: 'none',
-            borderRadius: 5,
-            cursor: 'pointer',
-          }}
+          className='EliminarLista'
         >
           Eliminar lista completa
         </button>
