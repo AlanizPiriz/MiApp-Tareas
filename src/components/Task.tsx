@@ -28,6 +28,7 @@ function TaskItem({ task, handleDelete }: { task: any; handleDelete: (id: string
     onSwipedRight: () => handleDelete(task.id),
     trackMouse: true,
     preventScrollOnSwipe: true,
+    delta: 100,
   });
 
   return (
