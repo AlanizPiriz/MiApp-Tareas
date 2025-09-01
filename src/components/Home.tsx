@@ -42,8 +42,8 @@ const Home = () => {
 
   return (
     <div>
-      <h1>
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="60" viewBox="0 0 250 60" preserveAspectRatio="xMidYMid meet">
+      <h1 style={{ textAlign: "center" }}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="60"  viewBox="0 0 250 60" preserveAspectRatio="xMidYMid meet">
 
   
           <text x="0" y="45" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#28a745">LIST</text>
