@@ -319,7 +319,20 @@ label span {
 /* Mientras se hace swipe */
 .task-item.swiping {
   background: rgba(231, 76, 60, 0.2) !important;
+  position: relative; /* Necesario para que el pseudo-elemento se posicione relativo al item */
 }
+
+.task-item.swiping::after {
+  content: "Borrar"; /* Texto que aparece */
+  position: absolute;
+  right: 500px; /* Ajusta la posición horizontal */
+  top: 50%; 
+  transform: translateY(-50%); /* Centrar verticalmente */
+  color: #e74c3c; /* Color del texto */
+  font-weight: bold;
+  pointer-events: none; /* Para que no interfiera con el swipe */
+}
+
 
 .task-item span {
   transition: transform 0.2s ease;
