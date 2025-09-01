@@ -14,6 +14,12 @@ body {
   color: #333;
   background: linear-gradient(135deg, #fcefee, #e3f0ff);
   min-height: 100dvh;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+  max-width: 100%;
 }
 
 .Bienvenida span{
@@ -224,11 +230,13 @@ button:hover {
 
 /* BOTONES DE LISTAS */
 .list-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 12px;
-  margin-top: 10px;
+  width: 100%;
+  max-width: 500px; 
 }
+
 
 .list-button {
   padding: 12px 20px;
