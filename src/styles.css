@@ -307,16 +307,38 @@ label span {
 
 .task-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* texto a la izquierda, botón a la derecha */
   align-items: center;
   padding: 14px 18px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.4);
-  transition: background 0.3s, transform 0.2s;
-  position: relative;
+  position: relative; /* necesario para posicionar la fecha en el medio */
   overflow: hidden;
   cursor: grab;
 }
+
+/* descripción a la izquierda */
+.task-desc {
+  flex: 1;
+  text-align: left;
+}
+
+/* fecha estrictamente centrada */
+.task-date {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+/* botón a la derecha */
+.task-item button {
+  flex: 0 0 auto;
+}
+
+
 
 /* Colores alternados */
 .task-item:nth-child(1n):not(.swiping) { background: rgba(255, 195, 160, 0.3); }
@@ -334,21 +356,6 @@ label span {
   position: relative; /* Necesario para que el pseudo-elemento se posicione relativo al item */
 }
 
-.task-item.swiping::after {
-  content: "Borrar"; /* Texto que aparece */
-  position: absolute;
-  right: 500px; /* Ajusta la posición horizontal */
-  top: 50%; 
-  transform: translateY(-50%); /* Centrar verticalmente */
-  color: #e74c3c; /* Color del texto */
-  font-weight: bold;
-  pointer-events: none; /* Para que no interfiera con el swipe */
-}
-
-
-.task-item span {
-  transition: transform 0.2s ease;
-}
 
 .TareasDe{
   border: solid 1px #28a745;
@@ -429,3 +436,31 @@ label span {
   color: #ffd700; /* dorado brillante */
   font-size: 10px;
 }
+
+
+.task-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: #fff; /* Fondo blanco sólido detrás de la tarjeta */
+  border-radius: 16px; /* mismo redondeo que el li para que coincida */
+}
+
+/* Texto "Borrar" fijo a la izquierda */
+.task-wrapper::before {
+  content: "Borrar";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #e74c3c;
+  font-weight: bold;
+  opacity: 0; /* oculto por defecto */
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+/* aparece solo cuando hay swipe */
+.task-wrapper.swiping::before {
+  opacity: 1;
+}
+

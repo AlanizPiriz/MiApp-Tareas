@@ -49,21 +49,26 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
     preventScrollOnSwipe: true,
   });
 
-
   return (
-    <li
-  {...handlers}
-  className={`task-item ${translateX > 50 ? 'swiping' : ''}`}
-  style={{
-    transform: `translateX(${translateX}px)`,
-    transition: swiping ? 'none' : 'transform 0.2s ease',
-  }}
->
-  <span>{task.description} <small>({fechaFormateada})</small></span>
-  <button onClick={() => handleDelete(task.id)}>Borrar</button>
-</li>
+    <div className={`task-wrapper ${translateX > 50 ? 'swiping' : ''}`}>
+      <li
+        {...handlers}
+        className="task-item"
+        style={{
+          transform: `translateX(${translateX}px)`,
+          transition: swiping ? 'none' : 'transform 0.2s ease',
+        }}
+      >
+        <span className="task-desc">{task.description}</span>
+        <small className="task-date">({fechaFormateada})</small>
+        <button onClick={() => handleDelete(task.id)}>Borrar</button>
+      </li>
+    </div>
   );
 }
+
+
+
 
 export default function TaskPage() {
   const { listId } = useParams<{ listId: string }>();
@@ -173,7 +178,7 @@ export default function TaskPage() {
         Agregar tarea
       </button>
 
-      <ul style={{ padding: 0 }}>
+      <ul style={{ padding: 0}}>
         {tasks.map((task, index) => (
           <TaskItem key={task.id} task={task} index={index} handleDelete={handleDelete} />
         ))}
