@@ -169,6 +169,18 @@ button:hover {
   transform: scale(1.05);
 }
 
+.ShareButton{
+  padding: 6px 10px; 
+  background: rgba(52, 152, 219, 0.7);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.25s, transform 0.2s;
+  backdrop-filter: blur(4px);
+}
+
 /* BOTONES ESPECIALES */
 .logout-button,
 .volver,
@@ -336,4 +348,84 @@ label span {
 
 .task-item span {
   transition: transform 0.2s ease;
+}
+
+.TareasDe{
+  border: solid 1px #28a745;
+  border-radius: 10px;
+}
+
+
+/* Contenedor del botón con tooltip */
+.ShareButtonWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Botón normal */
+.ShareButton {
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: bold;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.ShareButton:hover {
+  background-color: #155ab6;
+}
+
+/* Tooltip estilizado */
+.ShareButtonWrapper .tooltipText {
+  visibility: hidden;
+  width: max-content;
+  background-color: #ff6f61; /* color destacado para "Divide" */
+  color: white;
+  text-align: start;
+  padding: 10px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+  font-size: 10px;
+
+  /* Posición del tooltip */
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+
+  /* Animación */
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+/* Mostrar tooltip al hover */
+.ShareButtonWrapper:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+/* Triángulo debajo del tooltip */
+.ShareButtonWrapper .tooltipText::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #ff6f61 transparent transparent transparent;
+}
+
+/* Opcional: destacar la palabra "Divide" */
+.tooltipText span {
+  color: #ffd700; /* dorado brillante */
+  font-size: 10px;
 }

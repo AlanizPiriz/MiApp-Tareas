@@ -49,13 +49,6 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
     preventScrollOnSwipe: true,
   });
 
-  // const backgroundColors = [
-  //   'rgba(255, 195, 160, 0.3)',
-  //   'rgba(202, 231, 255, 0.3)',
-  //   'rgba(200, 255, 221, 0.3)',
-  //   'rgba(255, 220, 245, 0.3)',
-  // ];
-  //const defaultBg = backgroundColors[index % backgroundColors.length];
 
   return (
     <li
@@ -148,7 +141,7 @@ export default function TaskPage() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Tareas de la lista: {listName ?? listId}</h2>
+      <h2 className='TareasDe'>Tareas de la lista: {listName ?? listId}</h2>
 
       {ownerId && (
         <p>
@@ -159,7 +152,7 @@ export default function TaskPage() {
 
       {publicId && (
         <div style={{ marginTop: 30 }}>
-          <strong style={{ display: 'block', marginBottom: 8 }}>Compartir lista:</strong>
+          <strong style={{ display: 'block', marginBottom: 8 }}>Quieres compartir las tareas?</strong>
           <ShareToggle
             userId={user.uid}
             listId={listId}
