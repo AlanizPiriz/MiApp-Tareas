@@ -5,6 +5,7 @@ import { useAuth } from './AuthContext';
 import { db } from '../firebase';
 import BackButton from './BackButton';
 import ShareToggle from './ShareToggle';
+import { useSwipeable } from 'react-swipeable';
 
 import {
   subscribeToTasks,
@@ -12,6 +13,30 @@ import {
   deleteTask,
   deleteListAndTasks,
 } from '../Services/firestoreHelpers';
+
+// Componente separado para cada tarea (permite usar hooks)
+function TaskItem({ task, handleDelete }: { task: any; handleDelete: (id: string) => void }) {
+  const fechaFormateada = task.createdAt?.toDate
+    ? new Intl.DateTimeFormat('es-AR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }).format(task.createdAt.toDate())
+    : 'Sin fecha';
+
+  const handlers = useSwipeable({
+    onSwipedRight: () => handleDelete(task.id),
+    trackMouse: true,
+    preventScrollOnSwipe: true,
+  });
+
+  return (
+    <li {...handlers} style={{ touchAction: 'pan-y', listStyle: 'none', padding: '10px', borderBottom: '1px solid #ccc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span>{task.description} <small>({fechaFormateada})</small></span>
+      <button onClick={() => handleDelete(task.id)}>Borrar</button>
+    </li>
+  );
+}
 
 export default function TaskPage() {
   const { listId } = useParams<{ listId: string }>();
@@ -38,7 +63,6 @@ export default function TaskPage() {
         setIsPublic(data.isPublic || false);
         setOwnerId(data.ownerId || null);
 
-        // Buscar alias del owner si no sos vos
         if (data.ownerId && data.ownerId !== user.uid) {
           const userRef = doc(db, 'users', data.ownerId);
           const userSnap = await getDoc(userRef);
@@ -53,7 +77,6 @@ export default function TaskPage() {
     };
 
     fetchListData();
-
     const unsubscribe = subscribeToTasks(listId, setTasks);
     return () => unsubscribe();
   }, [user, listId]);
@@ -100,60 +123,37 @@ export default function TaskPage() {
         </p>
       )}
 
-      {/* Toggle y botones para compartir */}
       {publicId && (
         <div style={{ marginTop: 30 }}>
           <strong style={{ display: 'block', marginBottom: 8 }}>Compartir lista:</strong>
-
-          <div>
-            <ShareToggle
-              userId={user.uid}
-              listId={listId}
-              isPublic={isPublic}
-              publicId={publicId}
-            />
-          </div>
+          <ShareToggle
+            userId={user.uid}
+            listId={listId}
+            isPublic={isPublic}
+            publicId={publicId}
+          />
         </div>
       )}
-
 
       <input
         type="text"
         placeholder="Nueva tarea"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        style={{ padding: 10, width: '100%', marginTop: 10, marginBottom: 10 }}
       />
-      <button onClick={handleAdd} style={{ marginTop: 10, marginBottom: 20 }}>
+      <button onClick={handleAdd} style={{ marginBottom: 20 }}>
         Agregar tarea
       </button>
 
-      <ul>
-        {tasks.map((task) => {
-          const fechaFormateada = task.createdAt?.toDate
-            ? new Intl.DateTimeFormat('es-AR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-              }).format(task.createdAt.toDate())
-            : 'Sin fecha';
-
-          return (
-            <li key={task.id}>
-              {task.description} <small>({fechaFormateada})</small>{' '}
-              <button onClick={() => handleDelete(task.id)}>Borrar</button>
-            </li>
-          );
-        })}
+      <ul style={{ padding: 0 }}>
+        {tasks.map((task) => (
+          <TaskItem key={task.id} task={task} handleDelete={handleDelete} />
+        ))}
       </ul>
 
-      <div
-        className="BotonesBackEliminar"
-        style={{ marginTop: 30, display: 'flex', gap: 10 }}
-      >
-        <button
-          onClick={handleDeleteLista}
-          className='EliminarLista'
-        >
+      <div className="BotonesBackEliminar" style={{ marginTop: 30, display: 'flex', gap: 10 }}>
+        <button onClick={handleDeleteLista} className='EliminarLista'>
           Eliminar lista completa
         </button>
         <BackButton />
