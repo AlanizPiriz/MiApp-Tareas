@@ -42,18 +42,30 @@ const Home = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="60"  viewBox="0 0 250 60" preserveAspectRatio="xMidYMid meet">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="250" height="60" viewBox="0 0 250 60">
 
-  
-          <text x="0" y="45" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#28a745">LIST</text>
+          <text 
+            x="40%" 
+            y="45" 
+            fontFamily="Arial, sans-serif" 
+            fontSize="48" 
+            fontWeight="bold" 
+            fill="#28a745" 
+            textAnchor="middle"
+          >
+            LIST
+          </text>
 
-          <g transform="translate(130, -8.25)">
-            <circle cx="-2" cy="35" r="20" stroke="#28a745" stroke-width="6" fill="none"/>
-            <path d="M-10 35 l6 6 l10 -12" stroke="#28a745" stroke-width="6" fill="none"/>
+          
+          <g transform="translate(180, -8.25)">
+            <circle cx="0" cy="35" r="20" stroke="#28a745" strokeWidth="6" fill="none"/>
+            <path d="M-8 35 l6 6 l10 -12" stroke="#28a745" strokeWidth="6" fill="none"/>
           </g>
         </svg>
+
       </h1>
+
       <h3 className='Bienvenida'><span>Hola, </span>{user?.displayName}</h3>
       <button className="logout-button" onClick={logout}>
         Cerrar sesión

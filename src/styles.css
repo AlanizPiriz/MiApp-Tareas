@@ -282,10 +282,14 @@ button:hover {
 
 h1 {
   display: flex;
-  justify-content: center;
-  text-align: end;
-  padding-left: 15%;
+  justify-content: center; /* centra en horizontal */
+  align-items: center;     /* centra en vertical */
+  margin: 0;               /* elimina márgenes por defecto */
+  padding: 0;              /* no uses padding para centrar */
+  width: 100%;             /* ocupa todo el ancho disponible */
 }
+
+
 
 
 label span {

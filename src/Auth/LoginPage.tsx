@@ -57,10 +57,23 @@ export default function LoginPage() {
     <div style={{ maxWidth: 400, margin: 'auto', paddingTop: '2rem' }}>
       <h1>
         <svg xmlns="http://www.w3.org/2000/svg" width="250" height="60" viewBox="0 0 250 60">
-          <text x="0" y="45" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="bold" fill="#28a745">LIST</text>
-          <g transform="translate(130, -8.25)">
-            <circle cx="-2" cy="35" r="20" stroke="#28a745" strokeWidth="6" fill="none"/>
-            <path d="M-10 35 l6 6 l10 -12" stroke="#28a745" strokeWidth="6" fill="none"/>
+
+          <text 
+            x="40%" 
+            y="45" 
+            fontFamily="Arial, sans-serif" 
+            fontSize="48" 
+            fontWeight="bold" 
+            fill="#28a745" 
+            textAnchor="middle"
+          >
+            LIST
+          </text>
+
+          
+          <g transform="translate(180, -8.25)">
+            <circle cx="0" cy="35" r="20" stroke="#28a745" strokeWidth="6" fill="none"/>
+            <path d="M-8 35 l6 6 l10 -12" stroke="#28a745" strokeWidth="6" fill="none"/>
           </g>
         </svg>
       </h1>
