@@ -14,8 +14,11 @@ import {
   deleteListAndTasks,
 } from '../Services/firestoreHelpers';
 
-// Componente separado para cada tarea (permite usar hooks)
-function TaskItem({ task, handleDelete }: { task: any; handleDelete: (id: string) => void }) {
+// Componente para cada tarea
+function TaskItem({ task, index, handleDelete }: { task: any; index: number; handleDelete: (id: string) => void }) {
+  const [translateX, setTranslateX] = useState(0);
+  const [swiping, setSwiping] = useState(false);
+
   const fechaFormateada = task.createdAt?.toDate
     ? new Intl.DateTimeFormat('es-AR', {
         day: '2-digit',
@@ -25,17 +28,47 @@ function TaskItem({ task, handleDelete }: { task: any; handleDelete: (id: string
     : 'Sin fecha';
 
   const handlers = useSwipeable({
-    onSwipedRight: () => handleDelete(task.id),
+    onSwiping: (eventData) => {
+      if (eventData.dir === 'Right') {
+        setSwiping(true);
+        setTranslateX(Math.max(0, eventData.deltaX));
+      }
+    },
+    onSwipedRight: (eventData) => {
+      if (eventData.deltaX > 100) {
+        handleDelete(task.id);
+      }
+      setTranslateX(0);
+      setSwiping(false);
+    },
+    onSwipedLeft: () => {
+      setTranslateX(0);
+      setSwiping(false);
+    },
     trackMouse: true,
     preventScrollOnSwipe: true,
-    delta: 100,
   });
 
+  const backgroundColors = [
+    'rgba(255, 195, 160, 0.3)',
+    'rgba(202, 231, 255, 0.3)',
+    'rgba(200, 255, 221, 0.3)',
+    'rgba(255, 220, 245, 0.3)',
+  ];
+  //const defaultBg = backgroundColors[index % backgroundColors.length];
+
   return (
-    <li {...handlers} style={{ touchAction: 'pan-y', listStyle: 'none', padding: '10px', borderBottom: '1px solid #ccc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span>{task.description} <small>({fechaFormateada})</small></span>
-      <button onClick={() => handleDelete(task.id)}>Borrar</button>
-    </li>
+    <li
+  {...handlers}
+  className={`task-item ${translateX > 50 ? 'swiping' : ''}`}
+  style={{
+    transform: `translateX(${translateX}px)`,
+    transition: swiping ? 'none' : 'transform 0.2s ease',
+  }}
+>
+  <span>{task.description} <small>({fechaFormateada})</small></span>
+  <button onClick={() => handleDelete(task.id)}>Borrar</button>
+</li>
   );
 }
 
@@ -148,8 +181,8 @@ export default function TaskPage() {
       </button>
 
       <ul style={{ padding: 0 }}>
-        {tasks.map((task) => (
-          <TaskItem key={task.id} task={task} handleDelete={handleDelete} />
+        {tasks.map((task, index) => (
+          <TaskItem key={task.id} task={task} index={index} handleDelete={handleDelete} />
         ))}
       </ul>
 

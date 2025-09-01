@@ -78,15 +78,6 @@ li {
   transition: transform 0.2s, background 0.3s;
 }
 
-li:nth-child(1n) { background: rgba(255, 195, 160, 0.3); }
-li:nth-child(2n) { background: rgba(202, 231, 255, 0.3); }
-li:nth-child(3n) { background: rgba(200, 255, 221, 0.3); }
-li:nth-child(4n) { background: rgba(255, 220, 245, 0.3); }
-
-li:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.5);
-}
 
 li > span {
   flex: 1;
@@ -302,3 +293,34 @@ label span {
   font-weight: 600;
 }
 
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.4);
+  transition: background 0.3s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+}
+
+/* Colores alternados */
+.task-item:nth-child(1n):not(.swiping) { background: rgba(255, 195, 160, 0.3); }
+.task-item:nth-child(2n):not(.swiping) { background: rgba(202, 231, 255, 0.3); }
+.task-item:nth-child(3n):not(.swiping) { background: rgba(200, 255, 221, 0.3); }
+
+/* Hover solo si no está swiping */
+.task-item:hover:not(.swiping) {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Mientras se hace swipe */
+.task-item.swiping {
+  background: rgba(231, 76, 60, 0.2) !important;
+}
+
+.task-item span {
+  transition: transform 0.2s ease;
+}
