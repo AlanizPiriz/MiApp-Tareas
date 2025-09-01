@@ -15,7 +15,7 @@ import {
 } from '../Services/firestoreHelpers';
 
 // Componente para cada tarea
-function TaskItem({ task, index, handleDelete }: { task: any; index: number; handleDelete: (id: string) => void }) {
+function TaskItem({ task, handleDelete }: { task: any; index: number; handleDelete: (id: string) => void }) {
   const [translateX, setTranslateX] = useState(0);
   const [swiping, setSwiping] = useState(false);
 
@@ -49,12 +49,12 @@ function TaskItem({ task, index, handleDelete }: { task: any; index: number; han
     preventScrollOnSwipe: true,
   });
 
-  const backgroundColors = [
-    'rgba(255, 195, 160, 0.3)',
-    'rgba(202, 231, 255, 0.3)',
-    'rgba(200, 255, 221, 0.3)',
-    'rgba(255, 220, 245, 0.3)',
-  ];
+  // const backgroundColors = [
+  //   'rgba(255, 195, 160, 0.3)',
+  //   'rgba(202, 231, 255, 0.3)',
+  //   'rgba(200, 255, 221, 0.3)',
+  //   'rgba(255, 220, 245, 0.3)',
+  // ];
   //const defaultBg = backgroundColors[index % backgroundColors.length];
 
   return (
