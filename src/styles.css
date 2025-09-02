@@ -1,7 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,400&display=swap');
 
-/* GLOBAL */
+/* ===== VARIABLES DE COLOR ===== */
+:root {
+  /* Colores para modo claro */
+  --bg-color: linear-gradient(135deg, #fcefee, #e3f0ff);
+  --text-color: #333;
+  --primary-color: rgba(52, 152, 219, 0.7);
+  --secondary-color: rgba(44, 62, 80, 0.7);
+  --danger-color: #e74c3c;
+  --card-bg: rgba(255, 255, 255, 0.4);
+  --card-border: rgba(255, 255, 255, 0.3);
+  --input-bg: rgba(255, 255, 255, 0.35);
+  --input-border: rgba(51, 51, 51, 0.5);
+  --text-button-color: white;
+}
+
+[data-theme="dark"] {
+  /* Colores para modo oscuro */
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --primary-color: rgba(52, 152, 219, 0.6);
+  --secondary-color: rgba(44, 62, 80, 0.6);
+  --danger-color: #e57373;
+  --card-bg: rgba(30, 30, 30, 0.6);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(40, 40, 40, 0.5);
+  --input-border: rgba(200, 200, 200, 0.2);
+  --text-button-color: white;
+}
+
+/* ===== GLOBAL ===== */
 body {
   display: flex;
   justify-content: center;
@@ -10,10 +39,11 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  color: #333;
-  background: linear-gradient(135deg, #fcefee, #e3f0ff);
+  color: var(--text-color);
+  background: var(--bg-color);
   min-height: 100dvh;
   box-sizing: border-box;
+  transition: background 0.3s, color 0.3s;
 }
 
 * {
@@ -30,28 +60,29 @@ body {
   font-size: medium;
 }
 
-/* CONTENEDORES GLASS */
+/* ===== CONTENEDORES GLASS ===== */
 .container,
 .home-container {
   width: 90vw;
   max-width: 700px;
-  background: rgba(215, 229, 247, 0.25);
+  background: var(--card-bg);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   margin-top: 60px;
   padding: 30px 24px;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--card-border);
   text-align: center;
   transition: all 0.3s ease;
 }
 
-/* TITULOS */
+/* ===== TITULOS ===== */
 h1, h2, h3 {
-  color: #2c3e50;
+  color: var(--text-color);
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: color 0.3s;
 }
 
 h1 {
@@ -63,7 +94,7 @@ h1 {
   width: 100%;
 }
 
-/* LISTA DE TAREAS */
+/* ===== LISTA DE TAREAS ===== */
 ul {
   list-style: none;
   padding: 0;
@@ -79,12 +110,12 @@ li {
   align-items: center;
   padding: 14px 18px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--card-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: transform 0.2s, background 0.3s;
+  border: 1px solid var(--card-border);
+  transition: transform 0.2s, background 0.3s, color 0.3s, border 0.3s;
 }
 
 li > span {
@@ -98,7 +129,7 @@ li small {
 }
 
 li button {
-  background-color: #e74c3c;
+  background-color: var(--danger-color);
   border: none;
   color: white;
   padding: 4px 8px;
@@ -108,7 +139,7 @@ li button {
 }
 
 li button:hover {
-  background-color: #c0392b;
+  opacity: 0.85;
   transform: scale(1.05);
 }
 
@@ -116,39 +147,25 @@ li, li * {
   box-sizing: border-box;
 }
 
-/* INPUTS */
-input[type="text"] {
+/* ===== INPUTS ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
   flex: 1;
   width: 100%;
   max-width: 600px;
   padding: 12px 16px;
-  border: none;
-  border-radius: 14px;
-  font-size: 1em;
-  margin-right: 10px;
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: inset 0 0 0 2px rgba(200, 200, 200, 0.2);
-  transition: box-shadow 0.3s ease;
-}
-
-input[type="email"],
-input[type="password"] {
-  flex: 1;
-  width: 92%;
-  max-width: 600px;
-  padding: 12px 16px;
-  border: solid 1px rgb(51, 51, 51);
+  border: 1px solid var(--input-border);
   border-radius: 14px;
   font-size: 1em;
   margin-right: 10px;
   margin-bottom: 15px;
-  background: rgba(255, 255, 255, 0.35);
+  background: var(--input-bg);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  color: var(--text-color);
   box-shadow: inset 0 0 0 2px rgba(200, 200, 200, 0.2);
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s, color 0.3s, border 0.3s;
 }
 
 input[type="text"]:focus {
@@ -157,50 +174,50 @@ input[type="text"]:focus {
 }
 
 input:hover {
-  background-color: #f6f5f5;
+  background-color: rgba(255, 255, 255, 0.45);
 }
 
-/* BOTONES GENERALES */
+/* ===== BOTONES GENERALES ===== */
 button {
   padding: 10px 18px;
-  background: rgba(52, 152, 219, 0.7);
-  color: white;
+  background: var(--primary-color);
+  color: var(--text-button-color);
   border: none;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.25s, transform 0.2s;
+  transition: background 0.25s, transform 0.2s, color 0.25s;
   backdrop-filter: blur(4px);
 }
 
 button:hover {
-  background: rgba(52, 152, 219, 1);
+  opacity: 0.9;
   transform: scale(1.05);
 }
 
-/* BOTONES ESPECIALES */
+/* ===== BOTONES ESPECIALES ===== */
 .logout-button,
 .volver,
 .historial-button {
-  background: rgba(44, 62, 80, 0.7);
+  background: var(--secondary-color);
   backdrop-filter: blur(5px);
-  color: white;
+  color: var(--text-button-color);
   border: none;
   padding: 5px 9px;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.25s, transform 0.2s;
+  transition: background 0.25s, transform 0.2s, color 0.25s;
 }
 
 .logout-button:hover,
 .volver:hover,
 .historial-button:hover {
-  background: rgba(26, 37, 47, 0.9);
+  opacity: 0.9;
   transform: scale(1.05);
 }
 
-/* SECCIONES */
+/* ===== SECCIONES ===== */
 .list-creator-wrapper {
   margin-bottom: 30px;
 }
@@ -211,7 +228,7 @@ button:hover {
 
 .list-title {
   display: flex;
-  color: #2c3e50;
+  color: var(--text-color);
   margin-bottom: 10px;
   justify-content: center;
 }
@@ -227,7 +244,7 @@ button:hover {
   align-items: flex-end;
 }
 
-/* BOTONES DE LISTAS */
+/* ===== BOTONES DE LISTAS ===== */
 .list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -249,7 +266,7 @@ button:hover {
 }
 
 .list-my {
-  background: rgba(52, 152, 219, 0.6);
+  background: var(--primary-color);
 }
 
 .list-shared {
@@ -259,11 +276,11 @@ button:hover {
 .list-my:hover,
 .list-shared:hover {
   transform: scale(1.05);
-  background: rgba(52, 152, 219, 0.8);
+  opacity: 0.9;
 }
 
 .EliminarLista {
-  background-color: #e74c3c;
+  background-color: var(--danger-color);
   border: none;
   color: white;
   padding: 10px 18px;
@@ -273,11 +290,11 @@ button:hover {
 }
 
 .EliminarLista:hover {
-  background-color: #c0392b;
+  opacity: 0.85;
   transform: scale(1.05);
 }
 
-/* LABELS */
+/* ===== LABELS ===== */
 label span {
   display: flex;
   flex-direction: column;
@@ -288,50 +305,44 @@ label span {
   font-weight: 600;
 }
 
-/* TASK ITEMS */
+/* ===== TASK ITEMS ===== */
 .task-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 18px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--card-bg);
   position: relative;
   cursor: grab;
-  overflow: visible; /* importante para la sombra */
-  transition: transform 0.2s ease, background 0.3s ease;
+  overflow: visible;
+  transition: transform 0.2s ease, background 0.3s ease, color 0.3s;
 }
 
-
-
-/* descripción */
 .task-desc {
   flex: 1;
   text-align: left;
 }
 
-/* fecha centrada */
 .task-date {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  color: #666;
+  color: var(--text-color);
   font-size: 0.85em;
   white-space: nowrap;
 }
-
-/* botón */
+   
 .task-item button {
   flex: 0 0 auto;
 }
-
 
 .TareasDe {
   border: solid 1px #28a745;
   border-radius: 10px;
 }
 
-/* Share Button con tooltip */
+/* ===== SHARE BUTTON ===== */
 .ShareButtonWrapper {
   position: relative;
   display: inline-block;
@@ -365,13 +376,11 @@ label span {
   font-family: 'Arial', sans-serif;
   font-size: 10px;
   z-index: 10;
-
   position: absolute;
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s;
   pointer-events: none;
@@ -399,21 +408,19 @@ label span {
   font-size: 10px;
 }
 
-/* Task wrapper */
+/* ===== TASK WRAPPER ===== */
 .task-wrapper {
   position: relative;
   border-radius: 16px;
-  overflow: visible; /* necesario para que la sombra se vea */
+  overflow: visible;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Hover efecto “flotante” */
 .task-wrapper:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
   transform: translateY(-2px);
 }
-
 
 .task-wrapper::before {
   content: "Borrar";
@@ -421,21 +428,18 @@ label span {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #e74c3c;
+  color: var(--danger-color);
   font-weight: bold;
   opacity: 0;
   transition: opacity 0.2s;
   pointer-events: none;
 }
 
-
 .task-wrapper.swiping::before {
   opacity: 1;
 }
 
-
-/* ==== Alternado por posición del WRAPPER dentro del UL ==== */
-/* 3-colores: 1,2,3,1,2,3...  usando el índice del .task-wrapper */
+/* ===== Alternado por posición ===== */
 ul > .task-wrapper:nth-child(3n + 1) > .task-item:not(.swiping) {
   background: rgba(255, 195, 160, 0.3);
 }
@@ -446,17 +450,10 @@ ul > .task-wrapper:nth-child(3n) > .task-item:not(.swiping) {
   background: rgba(200, 255, 221, 0.3);
 }
 
-/* Hover (solo si no está swiping) */
 ul > .task-wrapper:hover > .task-item:not(.swiping) {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* ==== Estado de swipe ==== */
-/* En tu JSX la clase 'swiping' se aplica al WRAPPER, no al <li>, así que estilamos así: */
 .task-wrapper.swiping > .task-item {
   background: rgba(231, 76, 60, 0.5) !important;
 }
-
-/* (Opcional) Si querés mantener un efecto más leve mientras se arrastra pero aún no supera el umbral,
-   podés usar una clase intermedia en el wrapper y estilizarla parecido. */
-

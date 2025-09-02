@@ -157,7 +157,7 @@ export default function TaskPage() {
 
       {publicId && (
         <div style={{ marginTop: 30 }}>
-          <strong style={{ display: 'block', marginBottom: 8 }}>Quieres compartir las tareas?</strong>
+          <strong style={{ display: 'block', marginBottom: 8 }} className='tooltipText'>Quieres compartir las tareas?</strong>
           <ShareToggle
             userId={user.uid}
             listId={listId}
