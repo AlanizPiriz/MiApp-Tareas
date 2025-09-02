@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,400&display=swap" rel="stylesheet"');
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,400&display=swap');
 
 /* GLOBAL */
 body {
@@ -22,12 +21,12 @@ body {
   max-width: 100%;
 }
 
-.Bienvenida span{
+.Bienvenida span {
   font-family: 'Roboto', sans-serif;
   font-style: italic;
 }
 
-.Bienvenida{
+.Bienvenida {
   font-size: medium;
 }
 
@@ -36,15 +35,16 @@ body {
 .home-container {
   width: 90vw;
   max-width: 700px;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(215, 229, 247, 0.25);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   margin-top: 60px;
   padding: 30px 24px;
   border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 /* TITULOS */
@@ -52,6 +52,15 @@ h1, h2, h3 {
   color: #2c3e50;
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 /* LISTA DE TAREAS */
@@ -77,7 +86,6 @@ li {
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: transform 0.2s, background 0.3s;
 }
-
 
 li > span {
   flex: 1;
@@ -108,8 +116,8 @@ li, li * {
   box-sizing: border-box;
 }
 
-/* INPUT DE TAREA */
-input[type="text"]{
+/* INPUTS */
+input[type="text"] {
   flex: 1;
   width: 100%;
   max-width: 600px;
@@ -125,7 +133,8 @@ input[type="text"]{
   transition: box-shadow 0.3s ease;
 }
 
-input[type="email"],[type="password"] {
+input[type="email"],
+input[type="password"] {
   flex: 1;
   width: 92%;
   max-width: 600px;
@@ -147,7 +156,7 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 3px rgba(100, 150, 255, 0.4);
 }
 
-input:hover{
+input:hover {
   background-color: #f6f5f5;
 }
 
@@ -167,18 +176,6 @@ button {
 button:hover {
   background: rgba(52, 152, 219, 1);
   transform: scale(1.05);
-}
-
-.ShareButton{
-  padding: 6px 10px; 
-  background: rgba(52, 152, 219, 0.7);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.25s, transform 0.2s;
-  backdrop-filter: blur(4px);
 }
 
 /* BOTONES ESPECIALES */
@@ -217,7 +214,6 @@ button:hover {
   color: #2c3e50;
   margin-bottom: 10px;
   justify-content: center;
-
 }
 
 .empty-text {
@@ -239,7 +235,6 @@ button:hover {
   width: 100%;
   max-width: 500px; 
 }
-
 
 .list-button {
   padding: 12px 20px;
@@ -267,8 +262,7 @@ button:hover {
   background: rgba(52, 152, 219, 0.8);
 }
 
-
-.EliminarLista{
+.EliminarLista {
   background-color: #e74c3c;
   border: none;
   color: white;
@@ -283,47 +277,40 @@ button:hover {
   transform: scale(1.05);
 }
 
-h1 {
-  display: flex;
-  justify-content: center; /* centra en horizontal */
-  align-items: center;     /* centra en vertical */
-  margin: 0;               /* elimina márgenes por defecto */
-  padding: 0;              /* no uses padding para centrar */
-  width: 100%;             /* ocupa todo el ancho disponible */
-}
-
-
-
-
+/* LABELS */
 label span {
   display: flex;
-  flex-direction: column; /* texto arriba, input abajo */
-  align-items: flex-start; /* alinear todo a la izquierda */
+  flex-direction: column;
+  align-items: flex-start;
   font-family: Arial, sans-serif;
   font-size: 14px;
   margin-left: 5px;
   font-weight: 600;
 }
 
+/* TASK ITEMS */
 .task-item {
   display: flex;
-  justify-content: space-between; /* texto a la izquierda, botón a la derecha */
+  justify-content: space-between;
   align-items: center;
   padding: 14px 18px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.4);
-  position: relative; /* necesario para posicionar la fecha en el medio */
-  overflow: hidden;
+  position: relative;
   cursor: grab;
+  overflow: visible; /* importante para la sombra */
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
-/* descripción a la izquierda */
+
+
+/* descripción */
 .task-desc {
   flex: 1;
   text-align: left;
 }
 
-/* fecha estrictamente centrada */
+/* fecha centrada */
 .task-date {
   position: absolute;
   left: 50%;
@@ -333,43 +320,23 @@ label span {
   white-space: nowrap;
 }
 
-/* botón a la derecha */
+/* botón */
 .task-item button {
   flex: 0 0 auto;
 }
 
 
-
-/* Colores alternados */
-.task-item:nth-child(1n):not(.swiping) { background: rgba(255, 195, 160, 0.3); }
-.task-item:nth-child(2n):not(.swiping) { background: rgba(202, 231, 255, 0.3); }
-.task-item:nth-child(3n):not(.swiping) { background: rgba(200, 255, 221, 0.3); }
-
-/* Hover solo si no está swiping */
-.task-item:hover:not(.swiping) {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-/* Mientras se hace swipe */
-.task-item.swiping {
-  background: rgba(231, 76, 60, 0.2) !important;
-  position: relative; /* Necesario para que el pseudo-elemento se posicione relativo al item */
-}
-
-
-.TareasDe{
+.TareasDe {
   border: solid 1px #28a745;
   border-radius: 10px;
 }
 
-
-/* Contenedor del botón con tooltip */
+/* Share Button con tooltip */
 .ShareButtonWrapper {
   position: relative;
   display: inline-block;
 }
 
-/* Botón normal */
 .ShareButton {
   padding: 6px 10px;
   font-size: 10px;
@@ -386,11 +353,10 @@ label span {
   background-color: #155ab6;
 }
 
-/* Tooltip estilizado */
 .ShareButtonWrapper .tooltipText {
   visibility: hidden;
   width: max-content;
-  background-color: #ff6f61; /* color destacado para "Divide" */
+  background-color: #ff6f61;
   color: white;
   text-align: start;
   padding: 10px 10px;
@@ -398,28 +364,25 @@ label span {
   font-weight: bold;
   font-family: 'Arial', sans-serif;
   font-size: 10px;
+  z-index: 10;
 
-  /* Posición del tooltip */
   position: absolute;
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
 
-  /* Animación */
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s;
   pointer-events: none;
 }
 
-/* Mostrar tooltip al hover */
 .ShareButtonWrapper:hover .tooltipText {
   visibility: visible;
   opacity: 1;
   transform: translateX(-50%) translateY(-5px);
 }
 
-/* Triángulo debajo del tooltip */
 .ShareButtonWrapper .tooltipText::after {
   content: "";
   position: absolute;
@@ -431,21 +394,27 @@ label span {
   border-color: #ff6f61 transparent transparent transparent;
 }
 
-/* Opcional: destacar la palabra "Divide" */
 .tooltipText span {
-  color: #ffd700; /* dorado brillante */
+  color: #ffd700;
   font-size: 10px;
 }
 
-
+/* Task wrapper */
 .task-wrapper {
   position: relative;
-  overflow: hidden;
-  background: #fff; /* Fondo blanco sólido detrás de la tarjeta */
-  border-radius: 16px; /* mismo redondeo que el li para que coincida */
+  border-radius: 16px;
+  overflow: visible; /* necesario para que la sombra se vea */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Texto "Borrar" fijo a la izquierda */
+/* Hover efecto “flotante” */
+.task-wrapper:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
+}
+
+
 .task-wrapper::before {
   content: "Borrar";
   position: absolute;
@@ -454,13 +423,40 @@ label span {
   transform: translateY(-50%);
   color: #e74c3c;
   font-weight: bold;
-  opacity: 0; /* oculto por defecto */
+  opacity: 0;
   transition: opacity 0.2s;
   pointer-events: none;
 }
 
-/* aparece solo cuando hay swipe */
+
 .task-wrapper.swiping::before {
   opacity: 1;
 }
+
+
+/* ==== Alternado por posición del WRAPPER dentro del UL ==== */
+/* 3-colores: 1,2,3,1,2,3...  usando el índice del .task-wrapper */
+ul > .task-wrapper:nth-child(3n + 1) > .task-item:not(.swiping) {
+  background: rgba(255, 195, 160, 0.3);
+}
+ul > .task-wrapper:nth-child(3n + 2) > .task-item:not(.swiping) {
+  background: rgba(202, 231, 255, 0.3);
+}
+ul > .task-wrapper:nth-child(3n) > .task-item:not(.swiping) {
+  background: rgba(200, 255, 221, 0.3);
+}
+
+/* Hover (solo si no está swiping) */
+ul > .task-wrapper:hover > .task-item:not(.swiping) {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ==== Estado de swipe ==== */
+/* En tu JSX la clase 'swiping' se aplica al WRAPPER, no al <li>, así que estilamos así: */
+.task-wrapper.swiping > .task-item {
+  background: rgba(231, 76, 60, 0.5) !important;
+}
+
+/* (Opcional) Si querés mantener un efecto más leve mientras se arrastra pero aún no supera el umbral,
+   podés usar una clase intermedia en el wrapper y estilizarla parecido. */
 
