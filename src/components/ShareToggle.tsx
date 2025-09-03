@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import ShareButtons from './ShareButtons';
+import { FaLock, FaLockOpen } from 'react-icons/fa';
 
 interface Props {
   userId: string;
@@ -43,7 +44,8 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
     <div style={{ marginBottom: 20 }}>
       <div className="ShareButtonWrapper">
         <button onClick={toggleSharing} className="ShareButton">
-          {sharing ? '🔒 No compartir lista ' : '🔓 Compartir lista'}
+          {sharing ? <FaLockOpen color="white" /> : <FaLock color="white" />}
+          {sharing ? ' No compartir lista' : ' Compartir lista'}
         </button>
         <span className="tooltipText">
           <span>Divide</span> y triunfarás

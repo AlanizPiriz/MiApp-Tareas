@@ -6,6 +6,7 @@ import { db } from '../firebase';
 import BackButton from './BackButton';
 import ShareToggle from './ShareToggle';
 import { useSwipeable } from 'react-swipeable';
+import { FaTrash, FaClipboardList } from 'react-icons/fa';
 
 import {
   subscribeToTasks,
@@ -58,11 +59,24 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
           transform: `translateX(${translateX}px)`,
           transition: swiping ? 'none' : 'transform 0.2s ease',
         }}
-      >
-        <span className="task-desc">{task.description}</span>
-        <small className="task-date">({fechaFormateada})</small>
-        <button onClick={() => handleDelete(task.id)}>Borrar</button>
+        >
+        
+        <div className="task-info">
+          <div className="task-icon">
+            <FaClipboardList color="withe" />
+          </div>
+          <div className="task-text">
+            <span className="task-desc">{task.description}</span>
+            <small className="task-date">({fechaFormateada})</small>
+          </div>
+        </div>
+
+
+        <button onClick={() => handleDelete(task.id)}>
+          <FaTrash color="red" />
+        </button>
       </li>
+
     </div>
   );
 }
@@ -149,15 +163,15 @@ export default function TaskPage() {
       <h2 className='TareasDe'>Tareas de la lista: {listName ?? listId}</h2>
 
       {ownerId && (
-        <p>
-          <strong>Creada por:</strong>{' '}
+        <p style={{color: '#a9a8a8'}}>
+          <strong >Creada por:</strong>{' '}
           {ownerId === user.uid ? 'Vos' : ownerAlias ?? ownerId}
         </p>
       )}
 
       {publicId && (
         <div style={{ marginTop: 30 }}>
-          <strong style={{ display: 'block', marginBottom: 8 }} className='tooltipText'>Quieres compartir las tareas?</strong>
+          <strong style={{ display: 'block', marginBottom: 8 }} className='tooltipText'></strong>
           <ShareToggle
             userId={user.uid}
             listId={listId}
