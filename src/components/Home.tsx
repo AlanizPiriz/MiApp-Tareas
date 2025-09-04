@@ -16,7 +16,7 @@ interface List {
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [lists, setLists] = useState<List[]>([]);
 
   useEffect(() => {
@@ -67,9 +67,6 @@ const Home = () => {
       </h1>
 
       <h3 className='Bienvenida'><span>Hola, </span>{user?.displayName}</h3>
-      <button className="logout-button" onClick={logout}>
-        Cerrar sesión
-      </button>
 
       <div className="list-creator-wrapper">
         <ListCreator />

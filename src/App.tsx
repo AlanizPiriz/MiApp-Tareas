@@ -15,6 +15,7 @@ import RegisterPage from './Auth/RegisterPage';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import PublicListPage from './components/PublicListPage';
 import ThemeToggle from './components/ThemeToggle';
+import LogoutButton from './components/LogoutButton';
 
 const RedirectCompartir = () => {
   const location = useLocation();
@@ -125,6 +126,7 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
+        <LogoutButton />
         <ThemeToggle />
         <AppRouter />
       </Router>
