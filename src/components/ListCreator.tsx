@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { createList } from '../Services/firestoreHelpers';
 import { useNavigate } from 'react-router-dom';
+import { FaPlusCircle  } from 'react-icons/fa'
 
 export default function ListCreator() {
   const { user } = useAuth();
@@ -30,19 +31,19 @@ export default function ListCreator() {
   };
 
   return (
-    <div style={{ margin: '20px 0' }}>
+    <div style={{ margin: '20px 0'}}>
       <input
         type="text"
-        placeholder="Nombre de la lista"
+        placeholder="Ej: Compras del super"
         value={listName}
         onChange={(e) => setListName(e.target.value)}
       />
       <button 
         onClick={handleCreate} 
-        style={{ marginLeft: '10px', marginTop: 20 }}
         disabled={!listName.trim()}
+        className='crearListaBtn'
       >
-        Crear Lista
+        <FaPlusCircle  /> Crear Lista
       </button>
     </div>
   );

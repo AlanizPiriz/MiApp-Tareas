@@ -6,7 +6,7 @@ import { db } from '../firebase';
 import BackButton from './BackButton';
 import ShareToggle from './ShareToggle';
 import { useSwipeable } from 'react-swipeable';
-import { FaTrash, FaClipboardList } from 'react-icons/fa';
+import { FaTrash, FaRegClipboard } from 'react-icons/fa';
 
 import {
   subscribeToTasks,
@@ -63,7 +63,7 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
         
         <div className="task-info">
           <div className="task-icon">
-            <FaClipboardList color="withe" />
+            <FaRegClipboard color="withe" />
           </div>
           <div className="task-text">
             <span className="task-desc">{task.description}</span>
