@@ -499,6 +499,8 @@
   .logout-button {
     right: auto; /* mobile, se aleja del logo */
     left: 10px;
+    width: 56;
+    height: 38
   }
 }
 
