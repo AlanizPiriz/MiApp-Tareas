@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth } from "./AuthContext"; // ajusta la ruta según tu estructura
-import { FaSignOutAlt } from "react-icons/fa";
+//import { FaSignOutAlt } from "react-icons/fa";
 
 const LogoutButton: React.FC = () => {
   const { user, logout } = useAuth();
