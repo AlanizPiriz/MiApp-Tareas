@@ -35,9 +35,8 @@ const LogoutButton: React.FC = () => {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        width="18"
-        height="18"
         fill="currentColor"
+        className="logout-icon"
       >
         <g id="sign-out">
           <path d="M9,20.75H6a2.64,2.64,0,0,1-2.75-2.53V5.78A2.64,2.64,0,0,1,6,3.25H9a.75.75,0,0,1,0,1.5H6a1.16,1.16,0,0,0-1.25,1V18.22a1.16,1.16,0,0,0,1.25,1H9a.75.75,0,0,1,0,1.5Z"/>

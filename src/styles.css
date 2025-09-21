@@ -500,7 +500,7 @@
     right: auto;
     left: 10px;
     width: 56px;   /* corregido */
-    height: 20px;  /* corregido */
+    height: 34px;  /* corregido */
     border-radius: 12px; /* igual que desktop */
     padding: 0;          /* opcional para evitar que crezca */
   }
@@ -510,5 +510,11 @@
 .logout-button:hover {
   opacity: 0.9;
   transform: scale(1.05);
+}
+
+.logout-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0; /* evita que el SVG se estire en mobile */
 }
 
