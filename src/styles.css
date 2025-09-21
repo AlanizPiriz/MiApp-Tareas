@@ -502,7 +502,7 @@
     width: 56px;   /* corregido */
     height: 34px;  /* corregido */
     border-radius: 12px; /* igual que desktop */
-    padding: 0;          /* opcional para evitar que crezca */
+    padding: auto;          /* opcional para evitar que crezca */
   }
 }
 
@@ -513,8 +513,8 @@
 }
 
 .logout-icon {
-  width: 12px;
-  height: 12px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0; /* evita que el SVG se estire en mobile */
 }
 
