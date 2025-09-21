@@ -484,3 +484,29 @@
     background: var(--card-bg) !important;
   }
   
+
+  .logout-button {
+  right: 80px; /* desktop */
+  padding: 10px 18px;
+  background: var(--primary-color);
+  color: var(--text-button-color);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s, color 0.25s;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+  .logout-button {
+    right: auto; /* mobile, se aleja del logo */
+    left: 10px;
+  }
+}
+
+
+.logout-button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
