@@ -501,7 +501,7 @@
     left: 10px;
     width: 56px;   /* corregido */
     height: 38px;  /* corregido */
-    border-radius: 12px; /* igual que desktop */
+    border-radius: 8px; /* igual que desktop */
     padding: 0;          /* opcional para evitar que crezca */
   }
 }
