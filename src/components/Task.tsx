@@ -131,6 +131,12 @@ export default function TaskPage() {
     setInput('');
   };
 
+  const handleAddVoice = async (text: string) => {
+    if (!text.trim() || !listId) return;
+    await addTask(listId, text);
+    setInput(''); // limpia el input después de agregar
+  };
+
   const handleDelete = async (taskId: string) => {
     if (!listId) return;
     await deleteTask(listId, taskId);
@@ -170,7 +176,8 @@ export default function TaskPage() {
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      setInput(transcript);
+      setInput(transcript); // para mostrar en input
+      handleAddVoice(transcript); // agregar automáticamente
     };
 
     recognition.onerror = (event: any) => {
@@ -181,9 +188,6 @@ export default function TaskPage() {
 
     recognition.onend = () => {
       setListening(false);
-      if (input.trim()) {
-        handleAdd(); // agrega automáticamente al terminar de hablar
-      }
     };
   };
 
@@ -224,7 +228,7 @@ export default function TaskPage() {
         />
         <button 
           onClick={startVoiceInput} 
-          style={{height: '40px', padding: '10px 15px', cursor: 'pointer' }}
+          style={{height: '42px', padding: '10px 15px', cursor: 'pointer' }}
         >
           {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
         </button>
