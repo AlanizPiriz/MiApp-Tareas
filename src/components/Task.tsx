@@ -59,11 +59,10 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
           transform: `translateX(${translateX}px)`,
           transition: swiping ? 'none' : 'transform 0.2s ease',
         }}
-        >
-        
+      >
         <div className="task-info">
           <div className="task-icon">
-            <FaRegClipboard color="withe" />
+            <FaRegClipboard color="white" />
           </div>
           <div className="task-text">
             <span className="task-desc">{task.description}</span>
@@ -71,18 +70,13 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
           </div>
         </div>
 
-
         <button onClick={() => handleDelete(task.id)}>
           <FaTrash color="red" />
         </button>
       </li>
-
     </div>
   );
 }
-
-
-
 
 export default function TaskPage() {
   const { listId } = useParams<{ listId: string }>();
@@ -163,8 +157,8 @@ export default function TaskPage() {
       <h2 className='TareasDe'>Tareas de la lista: {listName ?? listId}</h2>
 
       {ownerId && (
-        <p style={{color: '#a9a8a8'}}>
-          <strong >Creada por:</strong>{' '}
+        <p style={{ color: '#a9a8a8' }}>
+          <strong>Creada por:</strong>{' '}
           {ownerId === user.uid ? 'Vos' : ownerAlias ?? ownerId}
         </p>
       )}
@@ -192,10 +186,17 @@ export default function TaskPage() {
         Agregar tarea
       </button>
 
-      <ul style={{ padding: 0}}>
-        {tasks.map((task, index) => (
-          <TaskItem key={task.id} task={task} index={index} handleDelete={handleDelete} />
-        ))}
+      <ul style={{ padding: 0 }}>
+        {tasks
+          .slice()
+          .sort((a, b) => {
+            const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+            const dateB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+            return dateB - dateA; // más reciente primero
+          })
+          .map((task, index) => (
+            <TaskItem key={task.id} task={task} index={index} handleDelete={handleDelete} />
+          ))}
       </ul>
 
       <div className="BotonesBackEliminar" style={{ marginTop: 30, display: 'flex', gap: 10 }}>
