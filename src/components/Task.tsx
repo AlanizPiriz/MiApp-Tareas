@@ -6,7 +6,7 @@ import { db } from '../firebase';
 import BackButton from './BackButton';
 import ShareToggle from './ShareToggle';
 import { useSwipeable } from 'react-swipeable';
-import { FaTrash, FaRegClipboard } from 'react-icons/fa';
+import { FaTrash, FaRegClipboard, FaMicrophone, FaMicrophoneAlt } from 'react-icons/fa';
 
 import {
   subscribeToTasks,
@@ -153,7 +153,7 @@ export default function TaskPage() {
     }
   };
 
-  // Función para crear tarea por voz
+  // Función para crear tarea por voz y agregar automáticamente
   const startVoiceInput = () => {
     if (!SpeechRecognition) {
       alert('Tu navegador no soporta reconocimiento de voz');
@@ -179,7 +179,12 @@ export default function TaskPage() {
       setListening(false);
     };
 
-    recognition.onend = () => setListening(false);
+    recognition.onend = () => {
+      setListening(false);
+      if (input.trim()) {
+        handleAdd(); // agrega automáticamente al terminar de hablar
+      }
+    };
   };
 
   if (!user) return <p>Debés iniciar sesión.</p>;
@@ -219,9 +224,9 @@ export default function TaskPage() {
         />
         <button 
           onClick={startVoiceInput} 
-          style={{ height: '40px', padding: '10px 15px', background: listening ? 'red' : 'white', cursor: 'pointer' }}
+          style={{ padding: '10px 15px', cursor: 'pointer' }}
         >
-          🎤
+          {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
         </button>
       </div>
 
