@@ -88,7 +88,11 @@ export default function TaskPage() {
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [ownerId, setOwnerId] = useState<string | null>(null);
   const [ownerAlias, setOwnerAlias] = useState<string | null>(null);
+  const [listening, setListening] = useState(false);
   const navigate = useNavigate();
+
+  // Detectar SpeechRecognition
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
   useEffect(() => {
     if (!user || !listId) return;
@@ -149,6 +153,35 @@ export default function TaskPage() {
     }
   };
 
+  // Función para crear tarea por voz
+  const startVoiceInput = () => {
+    if (!SpeechRecognition) {
+      alert('Tu navegador no soporta reconocimiento de voz');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'es-AR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+    setListening(true);
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Error en reconocimiento de voz:', event.error);
+      alert('No se pudo reconocer la voz. Intenta nuevamente.');
+      setListening(false);
+    };
+
+    recognition.onend = () => setListening(false);
+  };
+
   if (!user) return <p>Debés iniciar sesión.</p>;
   if (!listId) return <p>Lista inválida</p>;
 
@@ -175,13 +208,23 @@ export default function TaskPage() {
         </div>
       )}
 
-      <input
-        type="text"
-        placeholder="Nueva tarea"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        style={{ padding: 10, width: '100%', marginTop: 10, marginBottom: 10 }}
-      />
+      {/* Input + Botón de voz */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+        <input
+          type="text"
+          placeholder="Nueva tarea"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          style={{ flex: 1, padding: 10 }}
+        />
+        <button 
+          onClick={startVoiceInput} 
+          style={{ padding: '10px 15px', background: listening ? 'red' : 'white', cursor: 'pointer' }}
+        >
+          🎤
+        </button>
+      </div>
+
       <button onClick={handleAdd} style={{ marginBottom: 20 }}>
         Agregar tarea
       </button>
