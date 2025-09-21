@@ -224,7 +224,7 @@ export default function TaskPage() {
         />
         <button 
           onClick={startVoiceInput} 
-          style={{ padding: '10px 15px', cursor: 'pointer' }}
+          style={{height: '40px', padding: '10px 15px', cursor: 'pointer' }}
         >
           {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
         </button>
