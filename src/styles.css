@@ -69,7 +69,8 @@
     background: var(--bg-color);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    margin-top: 60px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     padding: 30px 24px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
