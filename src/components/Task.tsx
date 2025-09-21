@@ -219,7 +219,7 @@ export default function TaskPage() {
         />
         <button 
           onClick={startVoiceInput} 
-          style={{ padding: '10px 15px', background: listening ? 'red' : 'white', cursor: 'pointer' }}
+          style={{ height: '40px', padding: '10px 15px', background: listening ? 'red' : 'white', cursor: 'pointer' }}
         >
           🎤
         </button>
