@@ -484,9 +484,10 @@
     background: var(--card-bg) !important;
   }
   
-
-  .logout-button {
+.logout-button {
   right: 80px; /* desktop */
+  width: 56px;
+  height: 38px;
   background: var(--primary-color);
   color: var(--text-button-color);
   border-radius: 12px;
@@ -500,9 +501,9 @@
     right: auto;
     left: 10px;
     width: 56px;   /* corregido */
-    height: 34px;  /* corregido */
+    height: 38px;  /* corregido */
     border-radius: 12px; /* igual que desktop */
-    padding: auto;          /* opcional para evitar que crezca */
+    padding: 0;          /* opcional para evitar que crezca */
   }
 }
 

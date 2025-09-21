@@ -22,8 +22,6 @@ const LogoutButton: React.FC = () => {
       style={{
         position: "fixed",
         top: 10,
-        width: 56,
-        height: 38,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
