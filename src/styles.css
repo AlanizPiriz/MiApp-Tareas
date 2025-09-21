@@ -497,10 +497,12 @@
 
 @media (max-width: 768px) {
   .logout-button {
-    right: auto; /* mobile, se aleja del logo */
+    right: auto;
     left: 10px;
-    width: 56;
-    height: 38
+    width: 56px;   /* corregido */
+    height: 38px;  /* corregido */
+    border-radius: 12px; /* igual que desktop */
+    padding: 0;          /* opcional para evitar que crezca */
   }
 }
 
