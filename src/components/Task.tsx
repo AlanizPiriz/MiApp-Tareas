@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
@@ -89,6 +89,7 @@ export default function TaskPage() {
   const [ownerId, setOwnerId] = useState<string | null>(null);
   const [ownerAlias, setOwnerAlias] = useState<string | null>(null);
   const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
   const navigate = useNavigate();
 
   // Detectar SpeechRecognition
@@ -134,7 +135,7 @@ export default function TaskPage() {
   const handleAddVoice = async (text: string) => {
     if (!text.trim() || !listId) return;
     await addTask(listId, text);
-    setInput(''); // limpia el input después de agregar
+    setInput('');
   };
 
   const handleDelete = async (taskId: string) => {
@@ -159,7 +160,7 @@ export default function TaskPage() {
     }
   };
 
-  // Función para crear tarea por voz y agregar automáticamente
+  // Función para crear tarea por voz
   const startVoiceInput = () => {
     if (!SpeechRecognition) {
       alert('Tu navegador no soporta reconocimiento de voz');
@@ -171,18 +172,22 @@ export default function TaskPage() {
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
+    recognitionRef.current = recognition;
     recognition.start();
     setListening(true);
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      setInput(transcript); // para mostrar en input
-      handleAddVoice(transcript); // agregar automáticamente
+      setInput(transcript);
+      handleAddVoice(transcript);
+
+      // Forzar apagado del micrófono después de agregar la tarea
+      recognition.stop();
+      setListening(false);
     };
 
     recognition.onerror = (event: any) => {
       console.error('Error en reconocimiento de voz:', event.error);
-      alert('No se pudo reconocer la voz. Intenta nuevamente.');
       setListening(false);
     };
 
