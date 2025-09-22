@@ -15,18 +15,53 @@ import {
   deleteListAndTasks,
 } from '../Services/firestoreHelpers';
 
-// Componente para cada tarea
-function TaskItem({ task, handleDelete }: { task: any; index: number; handleDelete: (id: string) => void }) {
+// ====== Funciones de prioridad ======
+type Priority = 'alta' | 'media' | 'baja';
+
+function detectarPrioridad(texto: string): Priority {
+  const lower = texto.toLowerCase();
+  if (lower.includes('urgente') || lower.includes('importante') || lower.includes('prioridad alta')) return 'alta';
+  if (lower.includes('hoy') || lower.includes('mañana') || lower.includes('esta semana')) return 'media';
+  return 'baja';
+}
+
+function ordenarTareas(tasks: any[]) {
+  const prioridadOrden: Record<Priority, number> = { alta: 1, media: 2, baja: 3 };
+
+// dentro de ordenarTareas
+return [...tasks].sort((a, b) => {
+  const pA = (a.priority as Priority) || 'baja';
+  const pB = (b.priority as Priority) || 'baja';
+
+  if (prioridadOrden[pA] !== prioridadOrden[pB]) return prioridadOrden[pA] - prioridadOrden[pB];
+
+  const timeA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : a.createdAt?.getTime() || 0;
+  const timeB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : b.createdAt?.getTime() || 0;
+  return timeB - timeA;
+});
+
+}
+
+// ====== Componente TaskItem ======
+function TaskItem({ task, handleDelete }: { task: any; index?: number; handleDelete: (id: string) => void }) {
   const [translateX, setTranslateX] = useState(0);
   const [swiping, setSwiping] = useState(false);
 
   const fechaFormateada = task.createdAt?.toDate
-    ? new Intl.DateTimeFormat('es-AR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }).format(task.createdAt.toDate())
+    ? new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(task.createdAt.toDate())
+    : task.createdAt
+    ? new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(task.createdAt)
     : 'Sin fecha';
+
+  const colores: Record<Priority, string> = {
+  alta: "2px solid red",
+  media: "2px solid orange",
+  baja: "2px solid green",
+};
+
+// Dentro del render de TaskItem:
+const borderColor = colores[(task.priority as Priority) || 'baja'];
+
 
   const handlers = useSwipeable({
     onSwiping: (eventData) => {
@@ -36,9 +71,7 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
       }
     },
     onSwipedRight: (eventData) => {
-      if (eventData.deltaX > 100) {
-        handleDelete(task.id);
-      }
+      if (eventData.deltaX > 100) handleDelete(task.id);
       setTranslateX(0);
       setSwiping(false);
     },
@@ -58,19 +91,25 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
         style={{
           transform: `translateX(${translateX}px)`,
           transition: swiping ? 'none' : 'transform 0.2s ease',
+          border: borderColor,
+          borderRadius: 16,
+          background: 'rgba(255,255,255,0.4)',
+          padding: 14,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          cursor: 'grab',
         }}
       >
-        <div className="task-info">
-          <div className="task-icon">
-            <FaRegClipboard color="white" />
-          </div>
-          <div className="task-text">
-            <span className="task-desc">{task.description}</span>
-            <small className="task-date">({fechaFormateada})</small>
+        <div className="task-info" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <FaRegClipboard color="white" />
+          <div>
+            <span>{task.description}</span>
+            <small style={{ marginLeft: 8, color: '#ccc' }}>({fechaFormateada})</small>
           </div>
         </div>
 
-        <button onClick={() => handleDelete(task.id)}>
+        <button onClick={() => handleDelete(task.id)} style={{ border: 'none', background: 'transparent' }}>
           <FaTrash color="red" />
         </button>
       </li>
@@ -78,6 +117,7 @@ function TaskItem({ task, handleDelete }: { task: any; index: number; handleDele
   );
 }
 
+// ====== Componente principal TaskPage ======
 export default function TaskPage() {
   const { listId } = useParams<{ listId: string }>();
   const { user } = useAuth();
@@ -92,9 +132,9 @@ export default function TaskPage() {
   const recognitionRef = useRef<any>(null);
   const navigate = useNavigate();
 
-  // Detectar SpeechRecognition
   const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
+  // ====== Suscripción a Firestore y prioridad ======
   useEffect(() => {
     if (!user || !listId) return;
 
@@ -122,19 +162,40 @@ export default function TaskPage() {
     };
 
     fetchListData();
-    const unsubscribe = subscribeToTasks(listId, setTasks);
+
+    const unsubscribe = subscribeToTasks(listId, (fetchedTasks) => {
+      const tasksWithPriority = fetchedTasks.map(task => ({
+        ...task,
+        priority: detectarPrioridad(task.description),
+      }));
+      setTasks(ordenarTareas(tasksWithPriority));
+    });
+
     return () => unsubscribe();
   }, [user, listId]);
 
+  // ====== Agregar tareas ======
   const handleAdd = async () => {
     if (!input.trim() || !listId) return;
-    await addTask(listId, input);
+
+    const prioridad = detectarPrioridad(input);
+    await addTask(listId, input, prioridad);
+
+    setTasks(prev =>
+      ordenarTareas([...prev, { id: Date.now().toString(), description: input, createdAt: new Date(), prioridad }])
+    );
     setInput('');
   };
 
   const handleAddVoice = async (text: string) => {
     if (!text.trim() || !listId) return;
-    await addTask(listId, text);
+
+    const prioridad = detectarPrioridad(text);
+    await addTask(listId, text, prioridad);
+
+    setTasks(prev =>
+      ordenarTareas([...prev, { id: Date.now().toString(), description: text, createdAt: new Date(), prioridad }])
+    );
     setInput('');
   };
 
@@ -145,12 +206,7 @@ export default function TaskPage() {
 
   const handleDeleteLista = async () => {
     if (!listId) return;
-
-    const confirmar = window.confirm(
-      '¿Estás seguro de que querés eliminar esta lista y todas sus tareas?'
-    );
-    if (!confirmar) return;
-
+    if (!window.confirm('¿Estás seguro de que querés eliminar esta lista y todas sus tareas?')) return;
     try {
       await deleteListAndTasks(listId);
       navigate('/areas');
@@ -160,7 +216,7 @@ export default function TaskPage() {
     }
   };
 
-  // Función para crear tarea por voz
+  // ====== Reconocimiento de voz ======
   const startVoiceInput = () => {
     if (!SpeechRecognition) {
       alert('Tu navegador no soporta reconocimiento de voz');
@@ -181,7 +237,6 @@ export default function TaskPage() {
       setInput(transcript);
       handleAddVoice(transcript);
 
-      // Forzar apagado del micrófono después de agregar la tarea
       recognition.stop();
       setListening(false);
     };
@@ -191,9 +246,7 @@ export default function TaskPage() {
       setListening(false);
     };
 
-    recognition.onend = () => {
-      setListening(false);
-    };
+    recognition.onend = () => setListening(false);
   };
 
   if (!user) return <p>Debés iniciar sesión.</p>;
@@ -205,61 +258,42 @@ export default function TaskPage() {
 
       {ownerId && (
         <p style={{ color: '#a9a8a8' }}>
-          <strong>Creada por:</strong>{' '}
-          {ownerId === user.uid ? 'Vos' : ownerAlias ?? ownerId}
+          <strong>Creada por:</strong> {ownerId === user.uid ? 'Vos' : ownerAlias ?? ownerId}
         </p>
       )}
 
       {publicId && (
         <div style={{ marginTop: 30 }}>
-          <strong style={{ display: 'block', marginBottom: 8 }} className='tooltipText'></strong>
-          <ShareToggle
-            userId={user.uid}
-            listId={listId}
-            isPublic={isPublic}
-            publicId={publicId}
-          />
+          <ShareToggle userId={user.uid} listId={listId} isPublic={isPublic} publicId={publicId} />
         </div>
       )}
 
-     {/* Input + Botón de voz */}
-    <div style={{ display: 'flex', gap: 8, marginBottom: 10, position: 'relative' }}>
-      <input
-        type="text"
-        placeholder={listening ? "Escuchando..." : "Nueva tarea"}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        style={{ flex: 1, padding: 10 }}
-        className={`task-input ${listening ? "listening-placeholder" : ""}`}
-      />
-      <div style={{ position: 'relative', display: 'inline-block' }}>
-        <button
-          className={`voice-button`}
-          onClick={startVoiceInput} 
-          // style={{height: '42px', width: '42px', borderRadius: '50%', padding: '10px', cursor: 'pointer', position: 'relative', zIndex: 1}}
-        >
-          {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
-        </button>
-        {listening && <span className="voice-wave"></span>}
+      {/* Input + Botón de voz */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 10, position: 'relative' }}>
+        <input
+          type="text"
+          placeholder={listening ? '🎤 Escuchando...' : 'Nueva tarea'}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          style={{ flex: 1, padding: 10 }}
+          className={`task-input ${listening ? 'listening-placeholder' : ''}`}
+        />
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <button className="voice-button" onClick={startVoiceInput}>
+            {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
+          </button>
+          {listening && <span className="voice-wave"></span>}
+        </div>
       </div>
-    </div>
-        
 
       <button onClick={handleAdd} style={{ marginBottom: 20 }}>
         Agregar tarea
       </button>
 
       <ul style={{ padding: 0 }}>
-        {tasks
-          .slice()
-          .sort((a, b) => {
-            const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
-            const dateB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
-            return dateB - dateA; // más reciente primero
-          })
-          .map((task, index) => (
-            <TaskItem key={task.id} task={task} index={index} handleDelete={handleDelete} />
-          ))}
+        {tasks.map((task, index) => (
+          <TaskItem key={task.id} task={task} index={index} handleDelete={handleDelete} />
+        ))}
       </ul>
 
       <div className="BotonesBackEliminar" style={{ marginTop: 30, display: 'flex', gap: 10 }}>

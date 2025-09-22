@@ -72,7 +72,8 @@ export function subscribeToTasks(listId: string, callback: (tasks: any[]) => voi
 }
 
 // Crear tarea en la lista
-export async function addTask(listId: string, description: string) {
+// Crear tarea en la lista con prioridad
+export async function addTask(listId: string, description: string, priority: "alta" | "media" | "baja" = "baja") {
   try {
     const tasksRef = collection(db, 'lists', listId, 'tasks');
 
@@ -80,12 +81,14 @@ export async function addTask(listId: string, description: string) {
       description,
       done: false,
       createdAt: serverTimestamp(),
+      priority, // 👈 agregamos prioridad
     });
   } catch (error) {
     console.error('Error creando tarea:', error);
     throw error;
   }
 }
+
 
 // Eliminar tarea
 export async function deleteTask(listId: string, taskId: string) {
