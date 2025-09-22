@@ -222,22 +222,28 @@ export default function TaskPage() {
         </div>
       )}
 
-      {/* Input + Botón de voz */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-        <input
-          type="text"
-          placeholder="Nueva tarea"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          style={{ flex: 1, padding: 10 }}
-        />
-        <button 
+     {/* Input + Botón de voz */}
+    <div style={{ display: 'flex', gap: 8, marginBottom: 10, position: 'relative' }}>
+      <input
+        type="text"
+        placeholder={listening ? "Escuchando..." : "Nueva tarea"}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        style={{ flex: 1, padding: 10 }}
+        className={`task-input ${listening ? "listening-placeholder" : ""}`}
+      />
+      <div style={{ position: 'relative', display: 'inline-block' }}>
+        <button
+          className={`voice-button`}
           onClick={startVoiceInput} 
-          style={{height: '42px', padding: '10px 15px', cursor: 'pointer' }}
+          // style={{height: '42px', width: '42px', borderRadius: '50%', padding: '10px', cursor: 'pointer', position: 'relative', zIndex: 1}}
         >
           {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
         </button>
+        {listening && <span className="voice-wave"></span>}
       </div>
+    </div>
+        
 
       <button onClick={handleAdd} style={{ marginBottom: 20 }}>
         Agregar tarea
