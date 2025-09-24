@@ -103,9 +103,9 @@ const borderColor = colores[(task.priority as Priority) || 'baja'];
       >
         <div className="task-info" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <FaRegClipboard color="white" />
-          <div>
+          <div className='task-item-div'>
             <span>{task.description}</span>
-            <small style={{ marginLeft: 8, color: '#ccc' }}>({fechaFormateada})</small>
+            <small style={{color: '#ccc' }}>({fechaFormateada})</small>
           </div>
         </div>
 
@@ -268,23 +268,46 @@ export default function TaskPage() {
         </div>
       )}
 
-      {/* Input + Botón de voz */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 10, position: 'relative' }}>
-        <input
-          type="text"
-          placeholder={listening ? '🎤 Escuchando...' : 'Nueva tarea'}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          style={{ flex: 1, padding: 10 }}
-          className={`task-input ${listening ? 'listening-placeholder' : ''}`}
-        />
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <button className="voice-button" onClick={startVoiceInput}>
-            {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
-          </button>
-          {listening && <span className="voice-wave"></span>}
+      {/* Input con botón de voz adentro */}
+    <div style={{ position: "relative", marginBottom: 10 }}>
+     <input
+       type="text"
+       placeholder={listening ? " Escuchando..." : "Nueva tarea"}
+       value={input}
+       onChange={(e) => setInput(e.target.value)}
+       className={`task-input ${listening ? "listening-placeholder" : ""}`}
+       style={{
+         width: "100%",
+         padding: "10px 40px 10px 10px", // espacio a la derecha para el botón
+       }}
+     />
+
+      {/* Botón de voz dentro del input */}
+      <button
+        className="voice-button"
+        onClick={startVoiceInput}
+        style={{
+          position: "absolute",
+          right: "10px",
+          top: "35%",
+          transform: "translateY(-50%)",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        {listening ? <FaMicrophoneAlt color="red" /> : <FaMicrophone />}
+      </button>
+      
+      {/* Animación onda */}
+      {listening && (
+        <div
+          className="voice-wave"
+        ><FaMicrophoneAlt className='voice-microphone' />
         </div>
-      </div>
+      )}
+    </div>
+    
 
       <button onClick={handleAdd} style={{ marginBottom: 20 }}>
         Agregar tarea

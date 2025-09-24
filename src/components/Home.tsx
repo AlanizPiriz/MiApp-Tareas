@@ -71,53 +71,53 @@ const Home = () => {
       <div className="list-creator-wrapper">
         <ListCreator />
       </div>
-      <div style={{display: 'flex', justifyContent: 'center'}}>
-      <section className="list-section">
-        <h2 className="list-title">
-          <FaClipboardList style={{ marginRight: 8 }} color="#3498db" />
-          Mis listas
-        </h2>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <section className="list-section">
+          <h2 className="list-title">
+            <FaClipboardList style={{ marginRight: 8 }} color="#3498db" />
+            Mis listas
+          </h2>
 
         {myLists.length === 0 ? (
-          <p className="empty-text">No creaste ninguna lista aún.</p>
+        <p className="empty-text">No creaste ninguna lista aún.</p>
         ) : (
-          <div className="list-grid">
-            {myLists.map((list) => (
-              <button
-                key={list.id}
-                onClick={() => handleGoToList(list.id)}
-                className="list-button list-my"
-              >
-                {list.name}
-              </button>
-            ))}
-          </div>
-        )}
-      </section>
+            <div className="list-grid">
+              {myLists.map((list) => (
+                <button
+                  key={list.id}
+                  onClick={() => handleGoToList(list.id)}
+                  className="list-button list-my"
+                >
+                  {list.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+        
+        <section className="list-section" style={{ marginTop: "20px" }}>
+          <h2 className="list-title">
+            <FaUsers style={{ marginRight: 8 }} />
+            Listas compartidas conmigo
+          </h2>
+          {sharedLists.length === 0 ? (
+            <p className="empty-text">No hay listas compartidas con vos.</p>
+          ) : (
+            <div className="list-grid">
+              {sharedLists.map((list) => (
+                <button
+                  key={list.id}
+                  onClick={() => handleGoToList(list.id)}
+                  className="list-button list-shared"
+                >
+                  {list.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
-      <div style={{display: 'flex', justifyContent: 'center'}}>
-      <section className="list-section">
-        <h2 className="list-title">
-          <FaUsers style={{ marginRight: 8 }} />
-          Listas compartidas conmigo
-        </h2>
-        {sharedLists.length === 0 ? (
-          <p className="empty-text">No hay listas compartidas con vos.</p>
-        ) : (
-          <div className="list-grid">
-            {sharedLists.map((list) => (
-              <button
-                key={list.id}
-                onClick={() => handleGoToList(list.id)}
-                className="list-button list-shared"
-              >
-                {list.name}
-              </button>
-            ))}
-          </div>
-        )}
-      </section>
-      </div>
+
     </div>
   );
 };
