@@ -18,6 +18,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [lists, setLists] = useState<List[]>([]);
+  const [view, setView] = useState<"my" | "shared">("my");
 
   useEffect(() => {
     if (!user) return;
@@ -71,7 +72,27 @@ const Home = () => {
       <div className="list-creator-wrapper">
         <ListCreator />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+
+    {/* Botones para alternar vistas */}
+      <div className="tab-group">
+        <button
+          onClick={() => setView("my")}
+          className={view === "my" ? "tab-button active" : "tab-button"}
+        >
+          <FaClipboardList style={{ marginRight: 6 }} /> Mis listas
+        </button>
+        <button
+          onClick={() => setView("shared")}
+          className={view === "shared" ? "tab-button tab-shared active" : "tab-button tab-shared" }
+        >
+          <FaUsers style={{ marginRight: 6 }} /> Compartidas
+        </button>
+      </div>
+
+
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
+        {view === "my" && (
         <section className="list-section">
           <h2 className="list-title">
             <FaClipboardList style={{ marginRight: 8 }} color="#3498db" />
@@ -94,7 +115,9 @@ const Home = () => {
             </div>
           )}
         </section>
-        
+        )}
+
+        {view === "shared" && (
         <section className="list-section" style={{ marginTop: "20px" }}>
           <h2 className="list-title">
             <FaUsers style={{ marginRight: 8 }} />
@@ -116,6 +139,7 @@ const Home = () => {
             </div>
           )}
         </section>
+        )}
       </div>
 
     </div>
