@@ -514,6 +514,13 @@
     border-radius: 12px; /* igual que desktop */
     padding: 0;          /* opcional para evitar que crezca */
   }
+  .tab-button {
+    padding: 2px 15px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
 }
 
 
