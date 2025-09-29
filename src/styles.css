@@ -662,9 +662,11 @@
 /* Adaptación móvil */
 @media (max-width: 768px) {
   .tab-button {
-    padding: 4px 2px;
-    font-size: 8px;
+    padding: 6px 14px;   /* más espacio horizontal */
+    font-size: 10px;     /* un poquito más grande */
+    white-space: nowrap; /* evita que el texto baje a otra línea */
   }
+
 
   .logout-button{
     left: 10px;  /* lo mandamos a la izquierda */
