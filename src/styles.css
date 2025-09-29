@@ -662,7 +662,7 @@
 /* Adaptación móvil */
 @media (max-width: 768px) {
   .tab-button {
-    padding: 4px 10px;
+    padding: 4px 5px;
     font-size: 8px;
   }
 
