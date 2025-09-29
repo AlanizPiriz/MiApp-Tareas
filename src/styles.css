@@ -696,3 +696,9 @@
 }
 
 
+.list-title span {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+

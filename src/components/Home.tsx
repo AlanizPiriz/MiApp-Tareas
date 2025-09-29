@@ -120,8 +120,8 @@ const Home = () => {
         {view === "shared" && (
         <section className="list-section">
           <h2 className="list-title">
-            <FaUsers style={{ marginRight: 8 }} color='rgba(155, 89, 182, 0.6)' />
-            Listas compartidas
+            <FaUsers style={{ marginRight: 5 }} color='rgba(155, 89, 182, 0.6)' />
+            <span>Listas compartidas</span>
           </h2>
           {sharedLists.length === 0 ? (
             <p className="empty-text">No hay listas compartidas con vos.</p>
