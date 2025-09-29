@@ -5,12 +5,13 @@ import ShareButtons from "./ShareButtons";
 import { FaLock, FaLockOpen } from "react-icons/fa";
 
 interface Props {
+  userId?: string;
   listId: string;
   isPublic: boolean;
   publicId: string;
 }
 
-export default function ShareToggle({ listId, isPublic, publicId }: Props) {
+export default function ShareToggle({listId, isPublic, publicId }: Props) {
   const [sharing, setSharing] = useState(isPublic);
   const [copied, setCopied] = useState(false);
 
@@ -113,7 +114,6 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
               </div>
             )}
           </div>
-
           <ShareButtons publicId={publicId} />
         </div>
       )}
