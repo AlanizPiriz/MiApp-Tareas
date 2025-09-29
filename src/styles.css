@@ -662,7 +662,7 @@
 /* Adaptación móvil */
 @media (max-width: 768px) {
   .tab-button {
-    padding: 4px 5px;
+    padding: 4px 2px;
     font-size: 8px;
   }
 
@@ -670,7 +670,6 @@
     left: 10px;  /* lo mandamos a la izquierda */
     right: auto; /* anulamos el right */
   }
-
 
 }
 
