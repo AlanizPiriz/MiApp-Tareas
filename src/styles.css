@@ -505,24 +505,13 @@
   backdrop-filter: blur(4px);
 }
 
-@media (max-width: 768px) {
-  .logout-button {
-    right: auto;
-    left: 10px;
-    width: 56px;   /* corregido */
-    height: 35px;  /* corregido */
-    border-radius: 12px; /* igual que desktop */
-    padding: 0;          /* opcional para evitar que crezca */
-  }
-  .tab-button {
-    padding: 2px 15px;
-    font-size: 10px;
-    font-weight: 600;
-    color: #e74c3c;
+.tab-shared.active {
+  background: rgba(155, 89, 182, 0.6);
+  color: #fff;
 }
 
 
-}
+
 
 
 .logout-button:hover {
@@ -649,8 +638,21 @@
   color: #fff;
 }
 
+@media (max-width: 768px) {
+  .logout-button {
+    right: auto;
+    left: 10px;
+    width: 56px;   /* corregido */
+    height: 35px;  /* corregido */
+    border-radius: 12px; /* igual que desktop */
+    padding: 0;          /* opcional para evitar que crezca */
+  }
 
-.tab-shared.active {
-  background: rgba(155, 89, 182, 0.6);
-  color: #fff;
+  .tab-button.active, .tab-button{
+
+    padding: 2px 18px;
+    font-size: 10px;
+  }
+  
 }
+
