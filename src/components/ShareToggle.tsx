@@ -19,8 +19,13 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
     const listRef = doc(db, "lists", listId);
     const newSharingStatus = !sharing;
 
-    await updateDoc(listRef, { isPublic: newSharingStatus });
-    setSharing(newSharingStatus);
+    try {
+      await updateDoc(listRef, { isPublic: newSharingStatus });
+      setSharing(newSharingStatus);
+    } catch (err) {
+      console.error("Error actualizando la lista:", err);
+      alert("No se pudo cambiar el estado de compartir");
+    }
   };
 
   // Copiar al portapapeles
@@ -61,10 +66,11 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
           <div style={{ position: "relative", display: "inline-block" }}>
             <button
               onClick={handleCopy}
+              aria-label="Copiar enlace al portapapeles"
               style={{
                 backgroundColor: "#007bff",
                 color: "white",
-                padding: "3px 9px",
+                padding: "6px 10px",
                 borderRadius: "8px",
                 border: "none",
                 cursor: "pointer",
@@ -89,21 +95,25 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
                   marginBottom: "6px",
                   background: "rgba(0, 0, 0, 0.8)",
                   color: "white",
-                  padding: "4px 50px",
+                  padding: "4px 8px",
                   borderRadius: "6px",
                   fontSize: "14px",
                   pointerEvents: "none",
                   whiteSpace: "nowrap",
                   zIndex: 100,
-                  lineHeight: "1.2",         // asegura alineación vertical
-                  display: "flex",           // para centrar contenido
-                  alignItems: "left",      // centra verticalmente texto y emoji
+                  lineHeight: "1.2",
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                  opacity: copied ? 1 : 0,
+                  transition: "opacity 0.3s ease",
                 }}
               >
                 ¡Link copiado!
               </div>
             )}
           </div>
+
           <ShareButtons publicId={publicId} />
         </div>
       )}
