@@ -665,6 +665,7 @@
     padding: 6px 14px;   /* más espacio horizontal */
     font-size: 10px;     /* un poquito más grande */
     white-space: nowrap; /* evita que el texto baje a otra línea */
+    gap: 1px;
   }
 
 
