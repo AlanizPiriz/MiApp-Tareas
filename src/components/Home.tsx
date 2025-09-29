@@ -73,7 +73,7 @@ const Home = () => {
         <ListCreator />
       </div>
 
-
+    <div className='list-plate' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
     {/* Botones para alternar vistas */}
       <div className="tab-group">
         <button
@@ -91,7 +91,7 @@ const Home = () => {
       </div>
 
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
+      
         {view === "my" && (
         <section className="list-section">
           <h2 className="list-title">
@@ -120,8 +120,8 @@ const Home = () => {
         {view === "shared" && (
         <section className="list-section" style={{ marginTop: "20px" }}>
           <h2 className="list-title">
-            <FaUsers style={{ marginRight: 8 }} />
-            Listas compartidas conmigo
+            <FaUsers style={{ marginRight: 8 }} color='rgba(155, 89, 182, 0.6)' />
+            Listas compartidas
           </h2>
           {sharedLists.length === 0 ? (
             <p className="empty-text">No hay listas compartidas con vos.</p>

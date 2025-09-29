@@ -1,31 +1,26 @@
-import { useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import ShareButtons from './ShareButtons';
-import { FaLock, FaLockOpen } from 'react-icons/fa';
+import { useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import ShareButtons from "./ShareButtons";
+import { FaLock, FaLockOpen } from "react-icons/fa";
 
 interface Props {
-  userId: string;
   listId: string;
   isPublic: boolean;
   publicId: string;
 }
 
 export default function ShareToggle({ listId, isPublic, publicId }: Props) {
-  const [sharing, setSharing] = useState(isPublic); // Estado en Firebase
+  const [sharing, setSharing] = useState(isPublic);
   const [copied, setCopied] = useState(false);
-  const [showLink, setShowLink] = useState(false); // Controla visibilidad de botones
 
   // Alterna el estado de sharing y actualiza en Firebase
   const toggleSharing = async () => {
-    const listRef = doc(db, 'lists', listId);
+    const listRef = doc(db, "lists", listId);
     const newSharingStatus = !sharing;
 
     await updateDoc(listRef, { isPublic: newSharingStatus });
     setSharing(newSharingStatus);
-
-    // Mostrar los botones de link al activar sharing
-    setShowLink(newSharingStatus);
   };
 
   // Copiar al portapapeles
@@ -34,9 +29,9 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
       const url = `${window.location.origin}/compartir/${publicId}`;
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 1500);
     } catch (err) {
-      alert('Error al copiar el enlace');
+      alert("Error al copiar el enlace");
     }
   };
 
@@ -45,48 +40,74 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
       <div className="ShareButtonWrapper">
         <button onClick={toggleSharing} className="ShareButton">
           {sharing ? <FaLockOpen color="white" /> : <FaLock color="white" />}
-          {sharing ? ' No compartir lista' : ' Compartir lista'}
+          {sharing ? " No compartir lista" : " Compartir lista"}
         </button>
         <span className="tooltipText">
           <span>Divide</span> y triunfarás
         </span>
       </div>
-      
-      {showLink && (
+
+      {sharing && (
         <div
           style={{
             marginTop: 10,
-            display: 'flex',
-            alignItems: 'center',
+            display: "flex",
+            alignItems: "center",
             gap: 10,
-            flexWrap: 'wrap',
-            justifyContent: 'center',
+            flexWrap: "wrap",
+            justifyContent: "center",
           }}
         >
-          <button
-            onClick={handleCopy}
-            style={{
-              backgroundColor: '#007bff',
-              color: 'white',
-              padding: '3px 9px',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              fontSize: '16px',
-            }}
-          >
-            📋 {copied ? '¡Link copiado!' : 'Copiar link'}
-          </button>
-          
-          {/* Botones de compartir */}
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <button
+              onClick={handleCopy}
+              style={{
+                backgroundColor: "#007bff",
+                color: "white",
+                padding: "3px 9px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                fontSize: "16px",
+              }}
+            >
+              📋
+            </button>
+
+            {/* Tooltip encima del botón */}
+            {copied && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "100%",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  marginBottom: "6px",
+                  background: "rgba(0, 0, 0, 0.8)",
+                  color: "white",
+                  padding: "4px 50px",
+                  borderRadius: "6px",
+                  fontSize: "14px",
+                  pointerEvents: "none",
+                  whiteSpace: "nowrap",
+                  zIndex: 100,
+                  lineHeight: "1.2",         // asegura alineación vertical
+                  display: "flex",           // para centrar contenido
+                  alignItems: "left",      // centra verticalmente texto y emoji
+                }}
+              >
+                ¡Link copiado!
+              </div>
+            )}
+          </div>
+
           <ShareButtons publicId={publicId} />
         </div>
       )}
     </div>
-
   );
 }

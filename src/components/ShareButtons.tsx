@@ -61,7 +61,6 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ publicId }) => {
       }}
     >
       <FaWhatsapp size={20} />
-      <span>WhatsApp</span>
     </button>
 
     <button
@@ -82,7 +81,6 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ publicId }) => {
       }}
     >
       <MdEmail size={20} />
-          <span>Email</span>
         </button>
     </div>
   );

@@ -33,7 +33,7 @@ export default function CopyLinkButton({ publicId }: Props) {
           cursor: 'pointer',
         }}
       >
-        📋 Copiar link
+        📋
       </button>
 
       {copied && (

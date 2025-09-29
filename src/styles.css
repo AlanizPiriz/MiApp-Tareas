@@ -234,7 +234,6 @@
   }
 
   .list-section {
-    margin-top: 40px;
     width: 80%;
   }
 
@@ -505,14 +504,6 @@
   backdrop-filter: blur(4px);
 }
 
-.tab-shared.active {
-  background: rgba(155, 89, 182, 0.6);
-  color: #fff;
-}
-
-
-
-
 
 .logout-button:hover {
   opacity: 0.9;
@@ -609,19 +600,26 @@
   color: white;
 }
 
-
+/* Contenedor de tabs */
 .tab-group {
-  display: inline-flex;
-  border-radius: 12px;
-  overflow: hidden;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border: 2px solid var(--primary-color);
+  border-radius: 12px;   /* redondea el bloque entero */
+  overflow: hidden;      /* evita que los bordes de los botones sobresalgan */
 }
 
+/* Botones base */
 .tab-button {
+  display: flex;
+  align-items: center;   /* ícono + texto centrados */
+  gap: 6px;
   background: transparent;
-  border: none; 
-  border-radius: 0;
-  padding: 5px 25px;
+  border: none;
+  padding: 8px 20px;
   color: var(--primary-color);
   font-size: 16px;
   font-weight: 600;
@@ -629,30 +627,64 @@
   transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
+/* Hover */
 .tab-button:hover {
   background: rgba(40, 167, 69, 0.1);
 }
 
+/* Activo */
 .tab-button.active {
   background: var(--primary-color);
   color: #fff;
 }
 
-@media (max-width: 768px) {
-  .logout-button {
-    right: auto;
-    left: 10px;
-    width: 56px;   /* corregido */
-    height: 35px;  /* corregido */
-    border-radius: 12px; /* igual que desktop */
-    padding: 0;          /* opcional para evitar que crezca */
-  }
-
-  .tab-button.active, .tab-button{
-
-    padding: 2px 18px;
-    font-size: 10px;
-  }
-  
+/* Activo especial para Compartidas */
+.tab-button.tab-shared.active {
+  background: rgba(155, 89, 182, 0.6);
+  color: #fff;
 }
+
+/* Bordes solo en extremos */
+.tab-button:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.tab-button:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+/* Adaptación móvil */
+@media (max-width: 768px) {
+  .tab-button {
+    padding: 4px 14px;
+    font-size: 12px;
+  }
+}
+
+.list-plate {
+  position: relative;
+  border: 2px solid rgba(155, 89, 182, 0.6);
+  padding: 20px 20px 20px;
+  border-radius: 20px;
+}
+
+
+.tab-group:has(.tab-shared.active){
+  border: 2px solid rgba(155, 89, 182, 0.6);
+}
+
+.list-plate:has(.tab-button.active){
+  border: 2px solid var(--primary-color);
+}
+
+.list-plate:has(.tab-shared.active){
+  border: 2px solid  rgba(155, 89, 182, 0.6);
+}
+
 
