@@ -71,7 +71,7 @@ export default function ShareToggle({listId, isPublic, publicId }: Props) {
               style={{
                 backgroundColor: "#007bff",
                 color: "white",
-                padding: "6px 10px",
+                padding: "6px 12px",
                 borderRadius: "8px",
                 border: "none",
                 cursor: "pointer",
@@ -79,7 +79,7 @@ export default function ShareToggle({listId, isPublic, publicId }: Props) {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                fontSize: "16px",
+                fontSize: "12px",
               }}
             >
               📋

@@ -25,12 +25,17 @@ export default function CopyLinkButton({ publicId }: Props) {
       <button
         onClick={handleCopy}
         style={{
-          padding: '8px 12px',
-          backgroundColor: '#007bff',
+          backgroundColor: '#0072C6',
           color: 'white',
+          padding: '3px 9px',
+          borderRadius: '8px',
           border: 'none',
-          borderRadius: '6px',
           cursor: 'pointer',
+          fontWeight: 'bold',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontSize: '12px',
         }}
       >
         📋
