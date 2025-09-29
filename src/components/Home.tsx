@@ -118,7 +118,7 @@ const Home = () => {
         )}
 
         {view === "shared" && (
-        <section className="list-section" style={{ marginTop: "20px" }}>
+        <section className="list-section">
           <h2 className="list-title">
             <FaUsers style={{ marginRight: 8 }} color='rgba(155, 89, 182, 0.6)' />
             Listas compartidas

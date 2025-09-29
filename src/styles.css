@@ -662,9 +662,16 @@
 /* Adaptación móvil */
 @media (max-width: 768px) {
   .tab-button {
-    padding: 4px 14px;
-    font-size: 12px;
+    padding: 4px 10px;
+    font-size: 8px;
   }
+
+  .logout-button{
+    left: 10px;  /* lo mandamos a la izquierda */
+    right: auto; /* anulamos el right */
+  }
+
+
 }
 
 .list-plate {
