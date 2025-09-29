@@ -104,7 +104,6 @@ export default function ShareToggle({ listId, isPublic, publicId }: Props) {
               </div>
             )}
           </div>
-
           <ShareButtons publicId={publicId} />
         </div>
       )}
